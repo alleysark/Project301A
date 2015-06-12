@@ -193,6 +193,7 @@ pip-log.txt
 /Project301A/[Cc]ontent/ThirdPersonBP/
 /Project301A/[Ii]ntermediate/
 /Project301A/[Ss]aved/
+/Project301A/*.sln
 
 /Project301A/[Bb]uild/
 *.pbxuser
