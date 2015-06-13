@@ -7,8 +7,8 @@
 #include "Interactable/InteractableActor.h"
 
 // Sets default values for this component's properties
-UCharacterInteractionComponent::UCharacterInteractionComponent()
-: RaycastRange(170), TraceBoxSize(0, 30, 50), TraceDebugDisplay(false), trace_test(false)
+UCharacterInteractionComponent::UCharacterInteractionComponent(const FObjectInitializer& ObjectInitializer)
+: Super(ObjectInitializer), RaycastRange(170), TraceBoxSize(0, 30, 50), TraceDebugDisplay(false), trace_test(false)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.

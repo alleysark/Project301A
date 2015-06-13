@@ -6,7 +6,7 @@
 #include "CharacterInteractionComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS()
 class PROJECT301A_API UCharacterInteractionComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -36,7 +36,7 @@ public:
 
 public:	
 	// Sets default values for this component's properties
-	UCharacterInteractionComponent();
+	UCharacterInteractionComponent(const FObjectInitializer& ObjectInitializer);
 
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -60,7 +60,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	virtual void EventRightMouseClickPressed();
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	virtual void EventRightMouseClickReleased();
 	
