@@ -34,11 +34,13 @@ public:
 	UPrimitiveComponent *hit_comp_prev;
 	UMaterialInterface *mat_org;
 
+	UPROPERTY(BlueprintReadWrite, Category = "CharacterInteraction")
 	bool trace_test; 
 
+	UPROPERTY(BlueprintReadWrite, Category = "CharacterInteraction")
 	FHitResult hit;
 
-	USceneComponent *CharacterComponent;
+	USceneComponent *CharacterShapeComponent;
 
 public:	
 	// Sets default values for this component's properties
@@ -55,7 +57,7 @@ public:
 		
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	void RegisterCharacterMesh(USceneComponent *Comp) {
-		CharacterComponent = Comp;
+		CharacterShapeComponent = Comp;
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")

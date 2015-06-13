@@ -41,8 +41,8 @@ void UCharacterInteractionComponent::TickComponent( float DeltaTime, ELevelTick 
 	// ...
 
 		
-	FVector worldPos = CharacterComponent->K2_GetComponentLocation();
-	FRotator worldRot = CharacterComponent->K2_GetComponentRotation();
+	FVector worldPos = CharacterShapeComponent->K2_GetComponentLocation();
+	FRotator worldRot = CharacterShapeComponent->K2_GetComponentRotation();
 
 	FVector forwardVec = UKismetMathLibrary::GetForwardVector(worldRot);
 
@@ -53,22 +53,24 @@ void UCharacterInteractionComponent::TickComponent( float DeltaTime, ELevelTick 
 		: EDrawDebugTrace::Type::None;
 	
 	trace_test = UKismetSystemLibrary::BoxTraceSingleForObjects(
-		CharacterComponent, worldPos, endPoint, TraceBoxSize,
+		CharacterShapeComponent, worldPos, endPoint, TraceBoxSize,
 		worldRot, TracingObjectTypes, false, TraceIgnoreList, 
 		debug, hit, true);
 
-	if (hit_comp_prev) {
+
+	UPrimitiveComponent *comp = hit.GetComponent();
+
+	if (hit_comp_prev && !(trace_test || comp!=hit_comp_prev)) {
 		hit_comp_prev->SetMaterial(0, mat_org);
+		hit_comp_prev = NULL;
 	}
 
 	if (trace_test) {
-		//******************************
-		// to write
-		// highlight the object code 
-		//******************************
-		UPrimitiveComponent *comp = hit.GetComponent();
-		mat_org = comp->GetMaterial(0);
-		comp->SetMaterial(0, mat_highlight);
+
+		if (comp != hit_comp_prev) {
+			mat_org = comp->GetMaterial(0);
+			comp->SetMaterial(0, mat_highlight);
+		}
 
 		hit_comp_prev = comp;
 	}
