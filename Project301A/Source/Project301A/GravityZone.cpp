@@ -2,7 +2,7 @@
 
 #include "Project301A.h"
 #include "GravityZone.h"
-#include "GravitableObject.h"
+#include "Interactable/GravitableActor.h"
 
 // Sets default values
 AGravityZone::AGravityZone(const FObjectInitializer& ObjectInitializer)
@@ -48,7 +48,7 @@ void AGravityZone::OnBeginOverlap(AActor* other, UPrimitiveComponent* OtherComp,
 	bool bFromSweep, const FHitResult &SweepResult)
 {
 	// cast to CustomGravity object
-	AGravitableObject* cg = Cast<AGravitableObject>(other);
+	AGravitableActor* cg = Cast<AGravitableActor>(other);
 	if (cg) {
 		cg->SetGravity_internal(GetGravity_p());
 	}
@@ -56,7 +56,7 @@ void AGravityZone::OnBeginOverlap(AActor* other, UPrimitiveComponent* OtherComp,
 
 void AGravityZone::OnEndOverlap(AActor* other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	AGravitableObject *cg = Cast<AGravitableObject>(other);
+	AGravitableActor *cg = Cast<AGravitableActor>(other);
 	if (cg) {
 		cg->ReturnCustomGravity();
 	}
@@ -68,7 +68,7 @@ void AGravityZone::UpdateGravityInOverlapComponents()
 	triggerBox->GetOverlappingActors(overlaps);
 
 	for (int i = 0; i < overlaps.Num(); ++i) {
-		AGravitableObject *cg = Cast<AGravitableObject>(overlaps[i]);
+		AGravitableActor *cg = Cast<AGravitableActor>(overlaps[i]);
 		if (cg) {
 			cg->SetGravity_internal(GetGravity_p());
 		}
