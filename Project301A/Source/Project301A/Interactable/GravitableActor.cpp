@@ -12,6 +12,7 @@ AGravitableActor::AGravitableActor(const FObjectInitializer &ObjectInitializer)
 gravity_p(&world_gravity), gravity_p_prev(gravity_p)
 {
 
+	gravity = FVector(0, 0, -9.8);
 	SetActualMass();
 }
 
