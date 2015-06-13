@@ -14,12 +14,15 @@ public:
 
 	//// member
 
+	// Enable custom gravity
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gravity")
-	bool isEnableCustomGravity;
+	bool EnableCustomGravity;
 
+	// Fix custom gravity
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gravity")
 	bool fixedGravity;
 
+	// When gravity is fixed, this value is used as gravity.
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gravity")
 	FVector gravity;
 
@@ -54,33 +57,39 @@ public:
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
 
+	// Set gravity of object. This function also fix gravity of object.
 	UFUNCTION(BlueprintCallable, Category = "GravityX")
-	void SetGravity(const FVector &g);
+	void SetGravity(const FVector &newGravity);
 
+	// Return gravity of object.
 	UFUNCTION(BlueprintCallable, Category = "GravityX")
 	const FVector GetGravity() const { return *gravity_p; }
 
+	// Enable or disable whether objects gets custom gravity.
+	// If this seted disabled, object gets world gravity(original UE world gravity)
 	UFUNCTION(BlueprintCallable, Category = "GravityX")
 	void SetEnableCustomGravity(bool b);
 
+	// Fix gravity or not. If gravity is fixed, gravity zone or something couldn't change gravity of object.
 	UFUNCTION(BlueprintCallable, Category = "GravityX")
 	void SetFixCustomGravity(bool b);
 
+	// Return to previous gravity. For example, when object exits gravity zone, gravity becomes world gravity.
 	UFUNCTION(BlueprintCallable, Category = "GravityX")
 	void ReturnCustomGravity();
 
 	void ReturnWorldCustomGravity();
 
-	void SetGravity_internal(const FVector *g) {
-		gravity_p_prev = gravity_p;
-		if (!fixedGravity) {
-			gravity_p = g;
-		}
-	}
+	void SetGravity_internal(const FVector *g);
+	
 
+	void FixCurrentGravity();
+
+	// Static function. Set world custom gravity
 	UFUNCTION(BlueprintCallable, Category = "GravityX")
-	static void SetWorldCustomGravity(const FVector g);
+	static void SetWorldCustomGravity(const FVector newGravity);
 
+	// Static function. Get world custom gravity
 	UFUNCTION(BlueprintCallable, Category = "GravityX")
 	static const FVector GetWorldCustomGravity() { return world_gravity; }
 
@@ -106,7 +115,7 @@ private:
 		//Comp->BodyInstance.SetResponseToChannel(ECC_Pawn, ECR_Block);
 		Comp->SetCollisionProfileName("BlockAllDynamic");
 		Comp->BodyInstance.bSimulatePhysics = true;
-		Comp->BodyInstance.SetEnableGravity(!isEnableCustomGravity);
+		Comp->BodyInstance.SetEnableGravity(!EnableCustomGravity);
 		Comp->SetHiddenInGame(false);
 	}
 

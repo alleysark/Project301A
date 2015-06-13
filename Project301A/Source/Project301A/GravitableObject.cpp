@@ -7,8 +7,8 @@ FVector AGravitableObject::world_gravity = FVector(0, 0, -9.8);
 
 // Sets default values
 AGravitableObject::AGravitableObject(const FObjectInitializer &ObjectInitializer)
-	: Super(ObjectInitializer), Mesh(NULL),
-	isEnableCustomGravity(true), fixedGravity(false), gravity_p(&world_gravity)
+: Super(ObjectInitializer), Mesh(NULL), EnableCustomGravity(true), fixedGravity(false),
+	gravity_p(&world_gravity), gravity_p_prev(gravity_p)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -34,6 +34,9 @@ void AGravitableObject::BeginPlay()
 {
 	Super::BeginPlay();
 	SetActualMass();
+
+	if (fixedGravity) FixCurrentGravity();
+	else ReturnCustomGravity();
 }
 
 // Called every frame
@@ -41,7 +44,7 @@ void AGravitableObject::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-	if (isEnableCustomGravity) MeshComponent->AddForce(GetGravity() * actualMass);
+	if (EnableCustomGravity) MeshComponent->AddForce(GetGravity() * actualMass);
 }
 
 #if WITH_EDITOR
@@ -49,10 +52,13 @@ void AGravitableObject::PostEditChangeProperty(FPropertyChangedEvent& PropertyCh
 {
 	// mesh update
 	UpdateMesh(Mesh, MeshComponent);
-	MeshComponent->BodyInstance.SetEnableGravity(!isEnableCustomGravity);
+	MeshComponent->BodyInstance.SetEnableGravity(!EnableCustomGravity);
 
 	// mass update
 	SetActualMass();
+
+	if (fixedGravity) FixCurrentGravity();
+	else ReturnCustomGravity();
 
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
@@ -60,19 +66,27 @@ void AGravitableObject::PostEditChangeProperty(FPropertyChangedEvent& PropertyCh
 
 
 
-void AGravitableObject::SetGravity(const FVector &g)
+void AGravitableObject::SetGravity(const FVector &newGravity)
 {
 	gravity_p_prev = gravity_p;
 	if (!fixedGravity) {
-		gravity = g;
+		gravity = newGravity;
 		gravity_p = &gravity;
+		fixedGravity = true;
+	}
+}
+
+void AGravitableObject::SetGravity_internal(const FVector *g) {
+	gravity_p_prev = gravity_p;
+	if (!fixedGravity) {
+		gravity_p = g;
 	}
 }
 
 void AGravitableObject::SetEnableCustomGravity(bool b)
 {
-	isEnableCustomGravity = b;
-	MeshComponent->BodyInstance.SetEnableGravity(!isEnableCustomGravity);
+	EnableCustomGravity = b;
+	MeshComponent->BodyInstance.SetEnableGravity(!EnableCustomGravity);
 }
 
 void AGravitableObject::SetFixCustomGravity(bool b)
@@ -82,12 +96,17 @@ void AGravitableObject::SetFixCustomGravity(bool b)
 		ReturnCustomGravity();
 	}
 	else {
-		gravity = *gravity_p;
-		gravity_p_prev = gravity_p;
-		gravity_p = &gravity;
+		FixCurrentGravity();
 	}
-
 }
+
+void AGravitableObject::FixCurrentGravity()
+{
+	gravity = *gravity_p;
+	gravity_p_prev = gravity_p;
+	gravity_p = &gravity;
+}
+
 
 void AGravitableObject::ReturnCustomGravity()
 {
@@ -100,7 +119,7 @@ void AGravitableObject::ReturnWorldCustomGravity()
 }
 
 
-void AGravitableObject::SetWorldCustomGravity(const FVector g)
+void AGravitableObject::SetWorldCustomGravity(const FVector newGravity)
 {
-	world_gravity = g;
+	world_gravity = newGravity;
 }
