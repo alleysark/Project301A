@@ -8,15 +8,15 @@
 
 // Sets default values for this component's properties
 UCharacterInteractionComponent::UCharacterInteractionComponent()
-: RaycastRange(170), TraceBoxSize(0, 30, 50)
+: RaycastRange(170), TraceBoxSize(0, 30, 50), TraceDebugDisplay(false), trace_test(false)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	bWantsBeginPlay = true;
 	PrimaryComponentTick.bCanEverTick = true;
 
-	objectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_WorldDynamic));
-	objectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_WorldStatic));
+	TracingObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_WorldDynamic));
+	TracingObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_WorldStatic));
 
 	// ...
 }
@@ -47,10 +47,13 @@ void UCharacterInteractionComponent::TickComponent( float DeltaTime, ELevelTick 
 	forwardVec *= RaycastRange;
 	FVector endPoint = worldPos + forwardVec;
 
+	EDrawDebugTrace::Type debug = TraceDebugDisplay ? EDrawDebugTrace::Type::ForOneFrame
+		: EDrawDebugTrace::Type::None;
 	
 	trace_test = UKismetSystemLibrary::BoxTraceSingleForObjects(
 		CharacterComponent, worldPos, endPoint, TraceBoxSize,
-		worldRot, objectTypes, false, ignoreList, EDrawDebugTrace::Type::ForOneFrame, hit, true);
+		worldRot, TracingObjectTypes, false, TraceIgnoreList, 
+		debug, hit, true);
 
 	if (trace_test) {
 		//******************************

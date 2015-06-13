@@ -20,12 +20,16 @@ public:
 	FVector TraceBoxSize;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharacterInteraction")
-	TArray<TEnumAsByte<EObjectTypeQuery> > objectTypes;
+	TArray<TEnumAsByte<EObjectTypeQuery> > TracingObjectTypes;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharacterInteraction")
-	TArray<AActor*> ignoreList;
+	TArray<AActor*> TraceIgnoreList;
 
-	bool trace_test;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharacterInteraction")
+	bool TraceDebugDisplay;
+
+	bool trace_test; 
+
 	FHitResult hit;
 
 	USceneComponent *CharacterComponent;
