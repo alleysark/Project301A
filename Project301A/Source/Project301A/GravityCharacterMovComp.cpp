@@ -34,6 +34,10 @@ UGravityCharacterMovComp::UGravityCharacterMovComp(const FObjectInitializer& Obj
 	MaxAcceleration = 4096.f;
 	BrakingDecelerationWalking = 0.f;
 
+	RotationRate.Roll = 540.0f;
+	RotationRate.Pitch = 540.0f;
+	RotationRate.Yaw = 540.0f;
+
 	bFallingRemovesSpeedZ = true;
 	bIgnoreBaseRollMove = true;
 	CustomGravityDirection = FVector::ZeroVector;
