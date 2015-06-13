@@ -28,6 +28,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharacterInteraction")
 	bool TraceDebugDisplay;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharacterInteraction")
+	UMaterialInterface *mat_highlight;
+
+	UPrimitiveComponent *hit_comp_prev;
+	UMaterialInterface *mat_org;
+
 	bool trace_test; 
 
 	FHitResult hit;
