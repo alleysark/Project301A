@@ -6,7 +6,7 @@
 #include "CharacterInteractionComponent.generated.h"
 
 
-UCLASS()
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class PROJECT301A_API UCharacterInteractionComponent : public UActorComponent
 {
 	GENERATED_BODY()

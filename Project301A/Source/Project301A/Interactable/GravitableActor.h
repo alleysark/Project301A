@@ -66,7 +66,7 @@ public:
 	void SetFixCustomGravity(bool b);
 
 	// Return to previous gravity. For example, when object exits gravity zone, gravity becomes world gravity.
-	UFUNCTION(BlueprintCallable, Category = "GravityX")
+	//UFUNCTION(BlueprintCallable, Category = "GravityX")
 	void ReturnCustomGravity();
 
 	void ReturnWorldCustomGravity();

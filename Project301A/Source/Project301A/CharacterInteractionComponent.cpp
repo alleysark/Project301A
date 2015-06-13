@@ -60,7 +60,7 @@ void UCharacterInteractionComponent::TickComponent( float DeltaTime, ELevelTick 
 
 	UPrimitiveComponent *comp = hit.GetComponent();
 
-	if (hit_comp_prev && !(trace_test || comp!=hit_comp_prev)) {
+	if (hit_comp_prev && (!trace_test || comp!=hit_comp_prev)) {
 		hit_comp_prev->SetMaterial(0, mat_org);
 		hit_comp_prev = NULL;
 	}

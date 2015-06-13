@@ -58,7 +58,7 @@ void AGravityZone::OnEndOverlap(AActor* other, UPrimitiveComponent* OtherComp, i
 {
 	AGravitableActor *cg = Cast<AGravitableActor>(other);
 	if (cg) {
-		cg->ReturnCustomGravity();
+		cg->ReturnWorldCustomGravity();
 	}
 }
 

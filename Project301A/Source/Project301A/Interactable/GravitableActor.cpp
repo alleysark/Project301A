@@ -60,7 +60,6 @@ void AGravitableActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyCha
 
 void AGravitableActor::SetGravity(const FVector &newGravity)
 {
-	gravity_p_prev = gravity_p;
 	if (!fixedGravity) {
 		gravity = newGravity;
 		gravity_p = &gravity;
@@ -69,9 +68,9 @@ void AGravitableActor::SetGravity(const FVector &newGravity)
 }
 
 void AGravitableActor::SetGravity_internal(const FVector *g) {
-	gravity_p_prev = gravity_p;
 	if (!fixedGravity) {
 		gravity_p = g;
+		gravity_p_prev = gravity_p;
 	}
 }
 
@@ -94,8 +93,6 @@ void AGravitableActor::SetFixCustomGravity(bool b)
 
 void AGravitableActor::FixCurrentGravity()
 {
-	gravity = *gravity_p;
-	gravity_p_prev = gravity_p;
 	gravity_p = &gravity;
 }
 
