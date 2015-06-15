@@ -15,7 +15,7 @@ AStaticActor::AStaticActor(const FObjectInitializer &ObjectInitializer)
 }
 
 
-void AStaticActor::EventLeftMouseClickPressed(const FHitResult &hit)
+void AStaticActor::EventLeftMouseClickPressed_Implementation(const FHitResult &hit)
 {
 	if (CanChangeWorldGravity) {
 		AGravitableActor::SetWorldCustomGravity(-hit.Normal * 9.8);

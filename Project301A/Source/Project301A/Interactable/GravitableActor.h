@@ -95,7 +95,7 @@ public:
 
 public:
 
-	virtual void EventLeftMouseClickPressed(const FHitResult &hit) override;
-	virtual void EventRightMouseClickPressed(const FHitResult &hit) override;
+	virtual void EventLeftMouseClickPressed_Implementation(const FHitResult &hit) override;
+	virtual void EventRightMouseClickPressed_Implementation(const FHitResult &hit) override;
 	
 };

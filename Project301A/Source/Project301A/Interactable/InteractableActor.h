@@ -36,17 +36,21 @@ public:
 #endif
 	
 
-	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	virtual void EventLeftMouseClickPressed(const FHitResult &hit) {};
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interaction")
+	void EventLeftMouseClickPressed(const FHitResult &hit);
+	virtual void EventLeftMouseClickPressed_Implementation(const FHitResult &hit) {};
 
-	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	virtual void EventLeftMouseClickReleased(const FHitResult &hit) {};
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interaction")
+	void EventLeftMouseClickReleased(const FHitResult &hit);
+	virtual void EventLeftMouseClickReleased_Implementation(const FHitResult &hit) {};
 
-	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	virtual void EventRightMouseClickPressed(const FHitResult &hit) {};
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interaction")
+	void EventRightMouseClickPressed(const FHitResult &hit);
+	virtual void EventRightMouseClickPressed_Implementation(const FHitResult &hit) {};
 
-	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	virtual void EventRightMouseClickReleased(const FHitResult &hit) {};
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interaction")
+	void EventRightMouseClickReleased(const FHitResult &hit);
+	virtual void EventRightMouseClickReleased_Implementation(const FHitResult &hit) {};
 	
 
 private:

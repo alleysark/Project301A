@@ -116,14 +116,14 @@ void AGravitableActor::SetWorldCustomGravity(const FVector newGravity)
 
 
 
-void AGravitableActor::EventLeftMouseClickPressed(const FHitResult &hit)
+void AGravitableActor::EventLeftMouseClickPressed_Implementation(const FHitResult &hit)
 {
 	SetFixCustomGravity(!fixedGravity);
 }
 
-void AGravitableActor::EventRightMouseClickPressed(const FHitResult &hit)
+void AGravitableActor::EventRightMouseClickPressed_Implementation(const FHitResult &hit)
 {
-	ADynamicActor::EventRightMouseClickPressed(hit);
+	Super::EventRightMouseClickPressed_Implementation(hit);
 
 
 }

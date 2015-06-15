@@ -12,12 +12,12 @@ ADynamicActor::ADynamicActor(const FObjectInitializer &ObjectInitializer)
 
 
 
-void ADynamicActor::EventLeftMouseClickPressed(const FHitResult &hit)
+void ADynamicActor::EventLeftMouseClickPressed_Implementation(const FHitResult &hit)
 {
 
 }
 
-void ADynamicActor::EventRightMouseClickPressed(const FHitResult &hit)
+void ADynamicActor::EventRightMouseClickPressed_Implementation(const FHitResult &hit)
 {
 	//************************
 	// to write
