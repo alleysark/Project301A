@@ -5,6 +5,7 @@
 #include "Components/ActorComponent.h"
 #include "CharacterInteractionComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWorldCustomGravityChangedSignature, FVector, newGravity);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class PROJECT301A_API UCharacterInteractionComponent : public UActorComponent
@@ -54,6 +55,8 @@ public:
 		float DeltaTime, ELevelTick TickType, 
 		FActorComponentTickFunction* ThisTickFunction ) override;
 
+	virtual void OnDestroy(bool AbilityIsEnding);
+
 		
 	UFUNCTION(BlueprintCallable, Category = "Character")
 	void RegisterCharacterMesh(USceneComponent *Comp) {
@@ -71,5 +74,11 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	virtual void EventRightMouseClickReleased();
+
+	UPROPERTY(BlueprintAssignable, Category = "Interaction")
+	FWorldCustomGravityChangedSignature OnWorldCustomGravityChanged;
+
+	UFUNCTION()
+	void OnWorldCustomGravityChanged_internal(FVector newGravity);
 	
 };

@@ -5,6 +5,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Interactable/InteractableActor.h"
+#include "Interactable/GravitableActor.h"
 
 // Sets default values for this component's properties
 UCharacterInteractionComponent::UCharacterInteractionComponent(const FObjectInitializer& ObjectInitializer)
@@ -18,6 +19,10 @@ hit_comp_prev(NULL), mat_org(NULL)
 
 	TracingObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_WorldDynamic));
 	TracingObjectTypes.Add(TEnumAsByte<EObjectTypeQuery>(ECC_WorldStatic));
+
+	AGravitableActor::WorldCustomGravityChanged.AddDynamic(
+		this,
+		&UCharacterInteractionComponent::OnWorldCustomGravityChanged_internal);
 
 	// ...
 }
@@ -78,6 +83,14 @@ void UCharacterInteractionComponent::TickComponent( float DeltaTime, ELevelTick 
 }
 
 
+void UCharacterInteractionComponent::OnDestroy(bool AbilityIsEnding)
+{
+	AGravitableActor::WorldCustomGravityChanged.RemoveDynamic(
+		this,
+		&UCharacterInteractionComponent::OnWorldCustomGravityChanged_internal);
+}
+
+
 void UCharacterInteractionComponent::EventLeftMouseClickPressed()
 {
 	if (!trace_test) return;
@@ -116,4 +129,8 @@ void UCharacterInteractionComponent::EventRightMouseClickReleased()
 	if (inac) {
 		inac->EventRightMouseClickReleased(hit);
 	}
+}
+
+void UCharacterInteractionComponent::OnWorldCustomGravityChanged_internal(FVector newGravity) {
+	OnWorldCustomGravityChanged.Broadcast(newGravity);
 }
