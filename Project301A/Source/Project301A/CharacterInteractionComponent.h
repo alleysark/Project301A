@@ -57,8 +57,7 @@ public:
 
 	virtual void OnDestroy(bool AbilityIsEnding);
 
-		
-	UFUNCTION(BlueprintCallable, Category = "Character")
+	
 	void RegisterCharacterMesh(USceneComponent *Comp) {
 		CharacterShapeComponent = Comp;
 	}
@@ -75,6 +74,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	virtual void EventRightMouseClickReleased();
 
+	// Event when world custom gravity is changed
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FWorldCustomGravityChangedSignature OnWorldCustomGravityChanged;
 

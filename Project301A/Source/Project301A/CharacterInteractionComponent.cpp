@@ -23,6 +23,7 @@ hit_comp_prev(NULL), mat_org(NULL)
 	AGravitableActor::WorldCustomGravityChanged.AddDynamic(
 		this,
 		&UCharacterInteractionComponent::OnWorldCustomGravityChanged_internal);
+	
 
 	// ...
 }
@@ -32,6 +33,24 @@ hit_comp_prev(NULL), mat_org(NULL)
 void UCharacterInteractionComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
+
+	// bind actions
+	AActor *owner = GetOwner();
+	if (!owner) return;
+	UInputComponent *input = GetOwner()->InputComponent;
+
+	check(input);
+
+	input->BindAction("GravityActivate", IE_Pressed, this, &UCharacterInteractionComponent::EventLeftMouseClickPressed);
+	input->BindAction("GravityActivate", IE_Released, this, &UCharacterInteractionComponent::EventLeftMouseClickReleased);
+	input->BindAction("Interaction", IE_Pressed, this, &UCharacterInteractionComponent::EventRightMouseClickPressed);
+	input->BindAction("Interaction", IE_Released, this, &UCharacterInteractionComponent::EventRightMouseClickReleased);
+
+
+	// register character mesh
+	ACharacter *owner_character = Cast<ACharacter>(owner);
+	RegisterCharacterMesh(owner_character->GetCapsuleComponent());
 
 	// ...
 	
