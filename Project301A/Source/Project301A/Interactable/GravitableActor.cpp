@@ -94,6 +94,7 @@ void AGravitableActor::SetFixCustomGravity(bool b)
 
 void AGravitableActor::FixCurrentGravity()
 {
+	gravity = *gravity_p;
 	gravity_p = &gravity;
 }
 
