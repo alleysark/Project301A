@@ -5,6 +5,8 @@
 #include "Interactable/DynamicActor.h"
 #include "GravitableActor.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSWorldCustomGravityChangedSignature, FVector, newGravity);
+
 /**
  * 
  */
@@ -83,6 +85,8 @@ public:
 	// Static function. Get world custom gravity
 	UFUNCTION(BlueprintCallable, Category = "GravityX")
 	static const FVector GetWorldCustomGravity() { return world_gravity; }
+
+	static FSWorldCustomGravityChangedSignature WorldCustomGravityChanged;
 
 	FORCEINLINE void SetActualMass() {
 		actualMass = MeshComponent->GetMass() * 100;

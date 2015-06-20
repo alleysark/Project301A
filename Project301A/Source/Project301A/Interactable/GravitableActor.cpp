@@ -5,7 +5,7 @@
 
 
 FVector AGravitableActor::world_gravity = FVector(0, 0, -9.8);
-
+FSWorldCustomGravityChangedSignature AGravitableActor::WorldCustomGravityChanged;
 
 AGravitableActor::AGravitableActor(const FObjectInitializer &ObjectInitializer)
 : Super(ObjectInitializer), EnableCustomGravity(true), fixedGravity(false),
@@ -112,6 +112,7 @@ void AGravitableActor::ReturnWorldCustomGravity()
 void AGravitableActor::SetWorldCustomGravity(const FVector newGravity)
 {
 	world_gravity = newGravity;
+	WorldCustomGravityChanged.Broadcast(newGravity);
 }
 
 
