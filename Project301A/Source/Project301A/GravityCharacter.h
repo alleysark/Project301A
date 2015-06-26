@@ -3,12 +3,20 @@
 #pragma once
 
 #include "GameFramework/Character.h"
+#include "CharacterInteractionComponent.h"
 #include "GravityCharacter.generated.h"
 
 UCLASS()
 class PROJECT301A_API AGravityCharacter : public ACharacter
 {
 	GENERATED_BODY()
+
+
+public:
+
+	UPROPERTY(Category = Character, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UCharacterInteractionComponent* CharacterInteraction;
+
 
 public:
 	// Sets default values for this character's properties
@@ -24,5 +32,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
 
 	
+
+	class UCharacterInteractionComponent* GetInteractionComponent() const;
 	
 };
