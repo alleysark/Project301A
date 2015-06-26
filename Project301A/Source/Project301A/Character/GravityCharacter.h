@@ -3,7 +3,7 @@
 #pragma once
 
 #include "GameFramework/Character.h"
-#include "CharacterInteractionComponent.h"
+#include "Character/CharacterInteractionComponent.h"
 #include "GravityCharacter.generated.h"
 
 UCLASS()

@@ -2,7 +2,7 @@
 
 #include "Project301A.h"
 #include "StaticActor.h"
-#include "Interactable/GravitableActor.h"
+#include "Interactable/Gravitable/GravitableActor.h"
 
 
 AStaticActor::AStaticActor(const FObjectInitializer &ObjectInitializer)

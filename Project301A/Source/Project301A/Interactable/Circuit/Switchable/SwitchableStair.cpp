@@ -5,6 +5,7 @@
 
 
 ASwitchableStair::ASwitchableStair(const FObjectInitializer &ObjectInitializer)
+	:Super(ObjectInitializer)
 {
 	//For debug messege
 	PrimaryActorTick.bCanEverTick = true;
@@ -50,7 +51,7 @@ void ASwitchableStair::Tick(float DeltaTime)
 	//Animation for Active
 	if (Animating)
 	{
-		if (bIsActive)
+		if (ActivatedP())
 		{
 			for (int i = 1; i < Comp.Num(); ++i)
 			{
@@ -163,7 +164,7 @@ void ASwitchableStair::UpdateStair()
 		Scale.X -= diff;
 		CurComp[iStepNum]->SetWorldScale3D(Scale);
 		FVector Location = FVector(dX*(float)iStepNum / 2.f, 0, 0);
-		if (bIsActive) Location.Z = BaseSize.Z*(float)iStepNum;
+		if (ActivatedP()) Location.Z = BaseSize.Z*(float)iStepNum;
 		CurComp[iStepNum]->SetRelativeLocation(Location);
 
 	}
@@ -197,7 +198,7 @@ void ASwitchableStair::AnimateStair()
 			AnimationDistence.Add(BaseSize.Z*(float)i);
 			CompLocation.Add(FVector(dX * (float)i / 2.f, 0, 0));
 			CompLocationReverse.Add(FVector(dX * (float)i / 2.f, 0, 0));
-			if (!bIsActive) CompLocation.Last().Z = BaseSize.Z*(float)i;
+			if (!ActivatedP()) CompLocation.Last().Z = BaseSize.Z*(float)i;
 			else CompLocationReverse.Last().Z = BaseSize.Z*(float)i;
 		}
 

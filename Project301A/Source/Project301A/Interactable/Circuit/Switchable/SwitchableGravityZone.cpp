@@ -1,11 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Project301A.h"
-#include "Interactable/GravitableActor.h"
+#include "Interactable/Gravitable/GravitableActor.h"
 #include "SwitchableGravityZone.h"
 
 
 ASwitchableGravityZone::ASwitchableGravityZone(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	// Use a sphere as a simple collision representation
 	triggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComp"));
@@ -34,7 +35,7 @@ void ASwitchableGravityZone::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (bIsActive) UpdateGravityInOverlapComponents();
+	if (ActivatedP()) UpdateGravityInOverlapComponents();
 }
 
 // Called every frame
@@ -48,7 +49,7 @@ void ASwitchableGravityZone::OnBeginOverlap(AActor* other, UPrimitiveComponent* 
 	bool bFromSweep, const FHitResult &SweepResult)
 {
 	AGravitableActor* cg = Cast<AGravitableActor>(other);
-	if (bIsActive){
+	if (ActivatedP()){
 		// cast to CustomGravity object
 		if (cg) {
 			cg->SetGravity_internal(GetGravity_p());
@@ -75,10 +76,10 @@ void ASwitchableGravityZone::UpdateGravityInOverlapComponents()
 
 	for (int i = 0; i < overlaps.Num(); ++i) {
 		AGravitableActor *cg = Cast<AGravitableActor>(overlaps[i]);
-		if (cg && bIsActive) {
+		if (cg && ActivatedP()) {
 			cg->SetGravity_internal(GetGravity_p());
 		}
-		else if (cg && !bIsActive)		{
+		else if (cg && !ActivatedP())		{
 			cg->ReturnWorldCustomGravity();
 		}
 	}

@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "SwitchableActor.h"
+#include "Interactable/Circuit/SwitchableActor.h"
 #include "SwitchableGravityZone.generated.h"
 
 /**

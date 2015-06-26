@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Project301A.h"
-#include "CharacterInteractionComponent.h"
+#include "Character/CharacterInteractionComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Interactable/InteractableActor.h"
-#include "Interactable/GravitableActor.h"
+#include "Interactable/Gravitable/GravitableActor.h"
 
 // Sets default values for this component's properties
 UCharacterInteractionComponent::UCharacterInteractionComponent(const FObjectInitializer& ObjectInitializer)
@@ -48,9 +48,12 @@ void UCharacterInteractionComponent::BeginPlay()
 	input->BindAction("Interaction", IE_Released, this, &UCharacterInteractionComponent::EventRightMouseClickReleased);
 
 
-	// register character mesh
+	// get owner character
 	ACharacter *owner_character = Cast<ACharacter>(owner);
-	RegisterCharacterMesh(owner_character->GetCapsuleComponent());
+	UCapsuleComponent *capsule = owner_character->GetCapsuleComponent();
+
+	// register character mesh
+	RegisterCharacterMesh(capsule);
 
 	// ...
 	
@@ -150,6 +153,8 @@ void UCharacterInteractionComponent::EventRightMouseClickReleased()
 	}
 }
 
-void UCharacterInteractionComponent::OnWorldCustomGravityChanged_internal(FVector newGravity) {
+void UCharacterInteractionComponent::OnWorldCustomGravityChanged_internal(FVector newGravity) 
+{
 	OnWorldCustomGravityChanged.Broadcast(newGravity);
 }
+

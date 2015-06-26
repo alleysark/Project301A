@@ -3,9 +3,12 @@
 #pragma once
 
 #include "Components/ActorComponent.h"
+#include "GravityZone.h"
 #include "CharacterInteractionComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWorldCustomGravityChangedSignature, FVector, newGravity);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEnterGravityZoneSignature, AGravityZone*, GravityZone, FVector, newGravity);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FExitGravityZoneSignature, AGravityZone*, GravityZone);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class PROJECT301A_API UCharacterInteractionComponent : public UActorComponent
@@ -78,7 +81,14 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")
 	FWorldCustomGravityChangedSignature OnWorldCustomGravityChanged;
 
+	UPROPERTY(BlueprintAssignable, Category = "Interaction")
+	FEnterGravityZoneSignature OnEnterGravityZone;
+
+	UPROPERTY(BlueprintAssignable, Category = "Interaction")
+	FExitGravityZoneSignature OnExitGravityZone;
+
+
 	UFUNCTION()
 	void OnWorldCustomGravityChanged_internal(FVector newGravity);
-	
+
 };

@@ -2,7 +2,9 @@
 
 #include "Project301A.h"
 #include "GravityZone.h"
-#include "Interactable/GravitableActor.h"
+#include "Interactable/Gravitable/GravitableActor.h"
+#include "Character/GravityCharacter.h"
+#include "Character/CharacterInteractionComponent.h"
 
 // Sets default values
 AGravityZone::AGravityZone(const FObjectInitializer& ObjectInitializer)
