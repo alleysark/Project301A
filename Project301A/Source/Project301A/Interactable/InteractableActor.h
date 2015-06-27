@@ -12,13 +12,12 @@ class PROJECT301A_API AInteractableActor : public AActor
 
 public:
 
-
 	// mesh
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
-	UStaticMesh *Mesh;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Mesh")
+	//UStaticMesh *Mesh;
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
-	UStaticMeshComponent *MeshComponent;
+	//UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly)
+	//UStaticMeshComponent *MeshComponent;
 
 	
 public:	
@@ -37,21 +36,33 @@ public:
 	
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interaction")
-	void EventLeftMouseClickPressed(const FHitResult &hit);
-	virtual void EventLeftMouseClickPressed_Implementation(const FHitResult &hit) {};
+	void GravityActivateKeyPressed(const FHitResult &hit);
+	virtual void GravityActivateKeyPressed_Implementation(const FHitResult &hit) {};
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interaction")
-	void EventLeftMouseClickReleased(const FHitResult &hit);
-	virtual void EventLeftMouseClickReleased_Implementation(const FHitResult &hit) {};
+	void GravityActivateKeyReleased(const FHitResult &hit);
+	virtual void GravityActivateKeyReleased_Implementation(const FHitResult &hit) {};
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interaction")
-	void EventRightMouseClickPressed(const FHitResult &hit);
-	virtual void EventRightMouseClickPressed_Implementation(const FHitResult &hit) {};
+	void InteractionKeyPressed(const FHitResult &hit);
+	virtual void InteractionKeyPressed_Implementation(const FHitResult &hit) {};
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interaction")
-	void EventRightMouseClickReleased(const FHitResult &hit);
-	virtual void EventRightMouseClickReleased_Implementation(const FHitResult &hit) {};
+	void InteractionKeyReleased(const FHitResult &hit);
+	virtual void InteractionKeyReleased_Implementation(const FHitResult &hit) {};
 	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interaction")
+	void LiftKeyPressed(const FHitResult &hit);
+	virtual void LiftKeyPressed_Implementation(const FHitResult &hit) {};
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Interaction")
+	void LiftKeyReleased(const FHitResult &hit);
+	virtual void LiftKeyReleased_Implementation(const FHitResult &hit) {};
+
+
+	//bool CreateMesh(
+	//	bool create, const FObjectInitializer &ObjectInitializer,
+	//	UStaticMesh* mesh, UStaticMeshComponent *meshComp);
 
 private:
 	//// Mesh update
@@ -76,12 +87,12 @@ private:
 		Comp->SetMobility(EComponentMobility::Type::Movable);
 	}
 
-	FORCEINLINE void UpdateMesh(UStaticMesh *Mh, UStaticMeshComponent *Comp) {
+	//FORCEINLINE void UpdateMesh(UStaticMesh *Mh, UStaticMeshComponent *Comp) {
 
-		Comp->SetStaticMesh(Mh);
+	//	Comp->SetStaticMesh(Mh);
 
-		RootComponent = MeshComponent;
-		MeshComponent->AttachSocketName = "StaticMesh";
-	}
+	//	RootComponent = MeshComponent;
+	//	MeshComponent->AttachSocketName = "StaticMesh";
+	//}
 
 };

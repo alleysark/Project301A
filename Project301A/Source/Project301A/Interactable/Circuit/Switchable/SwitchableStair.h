@@ -54,4 +54,5 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Stair")
 	void AnimateStair();
 
+	virtual void OnCircuitStateChanged_Implementation(int32 state);
 };

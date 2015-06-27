@@ -6,11 +6,11 @@
 
 // Sets default values
 ASwitchableActor::ASwitchableActor(const FObjectInitializer &ObjectInitializer) 
-	: Super(ObjectInitializer)
+: Super(ObjectInitializer)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
 }
 
 // Called when the game starts or when spawned
@@ -25,9 +25,4 @@ void ASwitchableActor::Tick( float DeltaTime )
 {
 	Super::Tick( DeltaTime );
 
-}
-
-void ASwitchableActor::ActionToggle()
-{
-	isActivated = !isActivated;
 }

@@ -5,32 +5,46 @@
 
 
 ACircuitActor::ACircuitActor(const FObjectInitializer &ObjectInitializer)
-	: Super(ObjectInitializer), nextActor(NULL), isActivated(false)
+: Super(ObjectInitializer), nextActor(NULL), CircuitState(0)
 {
+	CanChangeWorldGravity = false;
+}
+
+
+#if WITH_EDITOR
+void ACircuitActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+
+	if (nextActor == this) nextActor = NULL;
+}
+#endif
+
+
+void ACircuitActor::InteractionKeyPressed_Implementation(const FHitResult &hit)
+{
+	ToggleState(1);
+}
+
+
+void ACircuitActor::SetState(int32 state)
+{
+	CircuitState = state;
+	OnCircuitStateChanged(state);
 	
+	if (nextActor && nextActor != this) nextActor->SetState(state);
+
 }
 
 
-bool ACircuitActor::Activate()
+int32 ACircuitActor::GetState() const
 {
-	isActivated = true;
-	if (nextActor) nextActor->Activate();
-
-	return isActivated;
+	return CircuitState;
 }
 
-
-
-bool ACircuitActor::Deactivate()
+void ACircuitActor::ToggleState(int32 state)
 {
-	isActivated = false;
-	if (nextActor) nextActor->Deactivate();
+	CircuitState = CircuitState == 0 ? state : 0;
 
-	return isActivated;
-}
-
-
-bool ACircuitActor::ActivatedP() const
-{
-	return isActivated;
+	SetState(CircuitState);
 }

@@ -8,14 +8,10 @@
 AStaticActor::AStaticActor(const FObjectInitializer &ObjectInitializer)
 : Super(ObjectInitializer), CanChangeWorldGravity(true)
 {
-	MeshComponent->BodyInstance.SetObjectType(ECC_WorldStatic);
-	MeshComponent->BodyInstance.SetCollisionProfileName("BlockAll");
-	MeshComponent->SetMobility(EComponentMobility::Type::Static);
-	MeshComponent->BodyInstance.bSimulatePhysics = false;
 }
 
 
-void AStaticActor::EventLeftMouseClickPressed_Implementation(const FHitResult &hit)
+void AStaticActor::GravityActivateKeyPressed_Implementation(const FHitResult &hit)
 {
 	if (CanChangeWorldGravity) {
 		AGravitableActor::SetWorldCustomGravity(-hit.Normal * 9.8);

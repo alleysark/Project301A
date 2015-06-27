@@ -35,7 +35,7 @@ void ASwitchableGravityZone::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (ActivatedP()) UpdateGravityInOverlapComponents();
+	if (GetState()) UpdateGravityInOverlapComponents();
 }
 
 // Called every frame
@@ -49,7 +49,7 @@ void ASwitchableGravityZone::OnBeginOverlap(AActor* other, UPrimitiveComponent* 
 	bool bFromSweep, const FHitResult &SweepResult)
 {
 	AGravitableActor* cg = Cast<AGravitableActor>(other);
-	if (ActivatedP()){
+	if (GetState()){
 		// cast to CustomGravity object
 		if (cg) {
 			cg->SetGravity_internal(GetGravity_p());
@@ -76,10 +76,10 @@ void ASwitchableGravityZone::UpdateGravityInOverlapComponents()
 
 	for (int i = 0; i < overlaps.Num(); ++i) {
 		AGravitableActor *cg = Cast<AGravitableActor>(overlaps[i]);
-		if (cg && ActivatedP()) {
+		if (cg && GetState()) {
 			cg->SetGravity_internal(GetGravity_p());
 		}
-		else if (cg && !ActivatedP())		{
+		else if (cg && !GetState())		{
 			cg->ReturnWorldCustomGravity();
 		}
 	}

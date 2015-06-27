@@ -42,11 +42,12 @@ void UCharacterInteractionComponent::BeginPlay()
 
 	check(input);
 
-	input->BindAction("GravityActivate", IE_Pressed, this, &UCharacterInteractionComponent::EventLeftMouseClickPressed);
-	input->BindAction("GravityActivate", IE_Released, this, &UCharacterInteractionComponent::EventLeftMouseClickReleased);
-	input->BindAction("Interaction", IE_Pressed, this, &UCharacterInteractionComponent::EventRightMouseClickPressed);
-	input->BindAction("Interaction", IE_Released, this, &UCharacterInteractionComponent::EventRightMouseClickReleased);
-
+	input->BindAction("GravityActivate", IE_Pressed, this, &UCharacterInteractionComponent::GravityActivateKeyPressed);
+	input->BindAction("GravityActivate", IE_Released, this, &UCharacterInteractionComponent::GravityActivateKeyReleased);
+	input->BindAction("Interaction", IE_Pressed, this, &UCharacterInteractionComponent::InteractionKeyPressed);
+	input->BindAction("Interaction", IE_Released, this, &UCharacterInteractionComponent::InteractionKeyReleased);
+	input->BindAction("Lift", IE_Pressed, this, &UCharacterInteractionComponent::LiftKeyPressed);
+	input->BindAction("Lift", IE_Released, this, &UCharacterInteractionComponent::LiftKeyReleased);
 
 	// get owner character
 	ACharacter *owner_character = Cast<ACharacter>(owner);
@@ -113,43 +114,63 @@ void UCharacterInteractionComponent::OnDestroy(bool AbilityIsEnding)
 }
 
 
-void UCharacterInteractionComponent::EventLeftMouseClickPressed()
+void UCharacterInteractionComponent::GravityActivateKeyPressed()
 {
 	if (!trace_test) return;
 
 	AInteractableActor *inac = Cast<AInteractableActor>(hit.GetActor());
 	if (inac) {
-		inac->EventLeftMouseClickPressed(hit);
+		inac->GravityActivateKeyPressed(hit);
 	}
 }
 
-void UCharacterInteractionComponent::EventLeftMouseClickReleased()
+void UCharacterInteractionComponent::GravityActivateKeyReleased()
 {
 	if (!trace_test) return;
 
 	AInteractableActor *inac = Cast<AInteractableActor>(hit.GetActor());
 	if (inac) {
-		inac->EventLeftMouseClickReleased(hit);
+		inac->GravityActivateKeyReleased(hit);
 	}
 }
 
-void UCharacterInteractionComponent::EventRightMouseClickPressed()
+void UCharacterInteractionComponent::InteractionKeyPressed()
 {
 	if (!trace_test) return;
 
 	AInteractableActor *inac = Cast<AInteractableActor>(hit.GetActor());
 	if (inac) {
-		inac->EventRightMouseClickPressed(hit);
+		inac->InteractionKeyPressed(hit);
 	}
 }
 
-void UCharacterInteractionComponent::EventRightMouseClickReleased()
+void UCharacterInteractionComponent::InteractionKeyReleased()
 {
 	if (!trace_test) return;
 
 	AInteractableActor *inac = Cast<AInteractableActor>(hit.GetActor());
 	if (inac) {
-		inac->EventRightMouseClickReleased(hit);
+		inac->InteractionKeyReleased(hit);
+	}
+}
+
+void UCharacterInteractionComponent::LiftKeyPressed()
+{
+	if (!trace_test) return;
+
+	AInteractableActor *inac = Cast<AInteractableActor>(hit.GetActor());
+	if (inac) {
+		inac->LiftKeyPressed(hit);
+	}
+}
+
+void UCharacterInteractionComponent::LiftKeyReleased()
+{
+	if (!trace_test) return;
+
+	AInteractableActor *inac = Cast<AInteractableActor>(hit.GetActor());
+	if (inac) {
+		inac->LiftKeyReleased(hit);
 	}
 }
 

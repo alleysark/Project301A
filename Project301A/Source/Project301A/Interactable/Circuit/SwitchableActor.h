@@ -17,9 +17,6 @@ public:
 	ASwitchableActor(const FObjectInitializer &ObjectInitializer);
 
 
-	UFUNCTION(BlueprintCallable, Category = "SwitchableActor")
-	void ActionToggle();
-
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -66,16 +66,22 @@ public:
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	virtual void EventLeftMouseClickPressed();
+	virtual void GravityActivateKeyPressed();
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	virtual void EventLeftMouseClickReleased();
+	virtual void GravityActivateKeyReleased();
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	virtual void EventRightMouseClickPressed();
+	virtual void InteractionKeyPressed();
 	
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
-	virtual void EventRightMouseClickReleased();
+	virtual void InteractionKeyReleased();
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	virtual void LiftKeyPressed();
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	virtual void LiftKeyReleased();
 
 	// Event when world custom gravity is changed
 	UPROPERTY(BlueprintAssignable, Category = "Interaction")

@@ -11,19 +11,19 @@ AGravitableActor::AGravitableActor(const FObjectInitializer &ObjectInitializer)
 : Super(ObjectInitializer), EnableCustomGravity(true), fixedGravity(false),
 gravity_p(&world_gravity), gravity_p_prev(gravity_p)
 {
-
 	gravity = FVector(0, 0, -9.8);
-	SetActualMass();
 }
 
 
 // Called when the game starts or when spawned
 void AGravitableActor::BeginPlay()
 {
-	AInteractableActor::BeginPlay();
+	Super::BeginPlay();
+
+	CreatePhysicsConstraints();
 	SetActualMass();
 
-	if (EnableCustomGravity) MeshComponent->BodyInstance.SetEnableGravity(false);
+	SetEnableGravity_internal(false);
 
 	if (fixedGravity) FixCurrentGravity();
 	else ReturnCustomGravity();
@@ -33,19 +33,19 @@ void AGravitableActor::BeginPlay()
 // Called every frame
 void AGravitableActor::Tick(float DeltaTime)
 {
-	AInteractableActor::Tick(DeltaTime);
+	Super::Tick(DeltaTime);
 
-	if (EnableCustomGravity) MeshComponent->AddForce(GetGravity() * actualMass);
+	if (EnableCustomGravity) AddGravity_internal();
 }
 
 
 #if WITH_EDITOR
 void AGravitableActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
-	AInteractableActor::PostEditChangeProperty(PropertyChangedEvent);
+	Super::PostEditChangeProperty(PropertyChangedEvent);
 
 	// mesh update
-	MeshComponent->BodyInstance.SetEnableGravity(!EnableCustomGravity);
+	SetEnableGravity_internal(false);
 
 	// mass update
 	SetActualMass();
@@ -56,6 +56,54 @@ void AGravitableActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyCha
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 #endif
+
+void AGravitableActor::CreatePhysicsConstraints()
+{
+	MeshComps.Empty();
+
+	TArray<UStaticMeshComponent*> comps;
+	this->GetComponents(comps);
+	for (UStaticMeshComponent* StaticMeshComponent : comps)
+	{
+		MeshComps.Add(StaticMeshComponent);
+	}
+
+	//TArray<UStaticMeshComponent*> SMComps;
+	//GetComponents(SMComps);
+
+	//int32 Num = SMComps.Num();
+	//if (Num == 0) MeshComps.Add(SMComps[0]);
+	//else if (Num > 1)
+	//{
+	//	for (int32 i = 0, End = Num - 1; i < End; i++)
+	//	{
+	//		MeshComps.Add(SMComps[i]);
+	//		auto SMCompCur = SMComps[i];
+	//		auto SMCompNext = SMComps[i + 1];
+
+	//		FConstraintInstance ConstraintInstance;
+
+	//		//New Object
+	//		UPhysicsConstraintComponent* ConstraintComp = NewObject<UPhysicsConstraintComponent>(this);
+	//		if (!ConstraintComp)
+	//		{
+	//			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, "Failed to create phys constraint comp");
+	//			return;
+	//		}
+	//		ConstraintComp->SetConstrainedComponents(SMCompCur, NAME_None, SMCompNext, NAME_None);
+
+	//		ConstraintComp->SetLinearXLimit(ELinearConstraintMotion::LCM_Locked, 0.0f);
+	//		ConstraintComp->SetLinearYLimit(ELinearConstraintMotion::LCM_Locked, 0.0f);
+	//		ConstraintComp->SetLinearZLimit(ELinearConstraintMotion::LCM_Locked, 0.0f);
+	//		ConstraintComp->SetAngularSwing1Limit(EAngularConstraintMotion::ACM_Locked, 0.0f);
+	//		ConstraintComp->SetAngularSwing2Limit(EAngularConstraintMotion::ACM_Locked, 0.0f);
+	//		ConstraintComp->SetAngularTwistLimit(EAngularConstraintMotion::ACM_Locked, 0.0f);
+
+	//		ConstraintComp->AttachTo(GetRootComponent(), NAME_None);
+	//	}
+	//	MeshComps.Add(SMComps[Num-1]);
+	//}
+}
 
 
 
@@ -78,7 +126,7 @@ void AGravitableActor::SetGravity_internal(const FVector *g) {
 void AGravitableActor::SetEnableCustomGravity(bool b)
 {
 	EnableCustomGravity = b;
-	MeshComponent->BodyInstance.SetEnableGravity(!EnableCustomGravity);
+	SetEnableGravity_internal(!EnableCustomGravity);
 }
 
 void AGravitableActor::SetFixCustomGravity(bool b)
@@ -118,14 +166,14 @@ void AGravitableActor::SetWorldCustomGravity(const FVector newGravity)
 
 
 
-void AGravitableActor::EventLeftMouseClickPressed_Implementation(const FHitResult &hit)
+void AGravitableActor::GravityActivateKeyPressed_Implementation(const FHitResult &hit)
 {
 	SetFixCustomGravity(!fixedGravity);
 }
 
-void AGravitableActor::EventRightMouseClickPressed_Implementation(const FHitResult &hit)
+void AGravitableActor::InteractionKeyPressed_Implementation(const FHitResult &hit)
 {
-	Super::EventRightMouseClickPressed_Implementation(hit);
+	Super::InteractionKeyPressed_Implementation(hit);
 
 
 }

@@ -25,6 +25,6 @@ public:
 public:
 
 	//UFUNCTION(BlueprintCallable, Category = "Interaction")
-	virtual void EventLeftMouseClickPressed_Implementation(const FHitResult &hit) override;
+	virtual void GravityActivateKeyPressed_Implementation(const FHitResult &hit) override;
 
 };

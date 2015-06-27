@@ -20,7 +20,7 @@ public:
 	ACircuitActor *nextActor;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Circuit")
-	bool isActivated;
+	int32 CircuitState;
 
 
 
@@ -28,13 +28,25 @@ public:
 
 	ACircuitActor(const FObjectInitializer &ObjectInitializer);
 
-	UFUNCTION(BlueprintCallable, Category = "Circuit")
-	virtual bool Activate();
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
+
+
+	virtual void InteractionKeyPressed_Implementation(const FHitResult &hit);
+
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Circuit")
+	void OnCircuitStateChanged(int32 state);
+	virtual void OnCircuitStateChanged_Implementation(int32 state) {};
 
 	UFUNCTION(BlueprintCallable, Category = "Circuit")
-	virtual bool Deactivate();
+	void SetState(int32 state);
 	
 	UFUNCTION(BlueprintCallable, Category = "Circuit")
-	virtual bool ActivatedP() const;
+	virtual int32 GetState() const;
 	
+	UFUNCTION(BlueprintCallable, Category = "Circuit")
+	void ToggleState(int32 state = 1);
+
 };
