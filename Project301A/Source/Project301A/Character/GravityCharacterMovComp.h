@@ -477,9 +477,19 @@ public:
 	virtual FVector GetComponentDesiredAxisZ() const;
 
 	/**
-	* Update the rotation of the updated component.
+	* maximum component rotation blending time (second).
+	* @see SetGravityDirection
 	*/
-	virtual void UpdateComponentRotation();
+	float MaxCompRotateBlendTime;
+
+	/**
+	* Update the rotation of the updated component.
+	* It rotates character component smoothly between 
+	* MaxCompRotateBlendTime or immediately.
+	*
+	* @see MaxCompRotateBlendTime
+	*/
+	virtual void UpdateComponentRotation(bool immediately = true);
 
 protected:
 	/**
@@ -550,5 +560,5 @@ public:
 	* @param NewGravityDirection - New gravity direction, assumes it isn't normalized.
 	*/
 	UFUNCTION(Category = "Pawn|Components|CharacterMovement", BlueprintCallable)
-	virtual void SetGravityDirection(FVector NewGravityDirection);
+	virtual void SetGravityDirection(FVector NewGravityDirection, float RotateBlendTime);
 };

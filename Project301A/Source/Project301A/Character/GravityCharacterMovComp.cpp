@@ -41,6 +41,8 @@ UGravityCharacterMovComp::UGravityCharacterMovComp(const FObjectInitializer& Obj
 	bFallingRemovesSpeedZ = true;
 	bIgnoreBaseRollMove = true;
 	CustomGravityDirection = FVector::ZeroVector;
+
+	MaxCompRotateBlendTime = 0.0f;
 }
 
 
@@ -3789,22 +3791,84 @@ FVector UGravityCharacterMovComp::GetComponentDesiredAxisZ() const
 }
 
 
-void UGravityCharacterMovComp::UpdateComponentRotation()
+void UGravityCharacterMovComp::UpdateComponentRotation(bool immediately)
 {
+	static float MaxBlendTime = 0.0f;
+	static float RemainingBlendTime = 0.0f;
+	static FQuat InitRotation;
+	static FQuat DesiredRotation;
+
 	if (!UpdatedComponent)
 	{
 		return;
 	}
-	const FVector DesiredCapsuleUp = GetComponentDesiredAxisZ();
-	// Abort if angle between new and old capsule 'up' axis almost equals to 0 degrees.
-	if ((DesiredCapsuleUp | GetCapsuleAxisZ()) >= THRESH_NORMALS_ARE_PARALLEL)
+
+	// initialize
+	if (immediately || RemainingBlendTime <= 0.0f)
 	{
-		return;
+		const FVector InitCapsuleUp = GetCapsuleAxisZ().SafeNormal();
+		const FVector DesiredCapsuleUp = GetComponentDesiredAxisZ();
+
+		// Abort if angle between new and old capsule 'up' axis almost equals to 0 degrees.
+		if ((DesiredCapsuleUp | InitCapsuleUp) >= THRESH_NORMALS_ARE_PARALLEL)
+		{
+			return;
+		}
+
+		const FVector InitCapsuleForward = GetCapsuleAxisX().SafeNormal();
+		InitRotation = GetCapsuleRotation();
+		float Angle = 0.0f;
+
+		// calc rotation axis to get desired capsule forward vector.
+		FVector Axis = FVector::CrossProduct(InitCapsuleUp, DesiredCapsuleUp);
+		if (Axis.IsNearlyZero())
+		{
+			// 180 degree
+			Axis = FVector::CrossProduct(InitCapsuleForward, InitCapsuleUp);
+			Angle = 180.0f;
+		}
+		else
+		{
+			// calc angle between initial capsule up and desired capsule up.
+			Angle = FMath::RadiansToDegrees(FMath::Acos(InitCapsuleUp.CosineAngle2D(DesiredCapsuleUp)));
+		}
+
+		// compute desired forward vector.
+		FVector DesiredCapsuleForward = InitCapsuleForward.RotateAngleAxis(Angle, Axis);
+
+		// Take desired Z rotation axis of capsule, try to keep current X rotation axis of capsule.
+		const FMatrix RotationMatrix = FRotationMatrix::MakeFromZX(DesiredCapsuleUp, DesiredCapsuleForward);
+		
+		// cache desired rotation.
+		DesiredRotation = RotationMatrix.ToQuat();
+
+		// if it is not immediate update, then reset remaining blend time.
+		// also cache max blend time to prevent update slag.
+		if (!immediately)
+		{
+			MaxBlendTime = MaxCompRotateBlendTime;
+			RemainingBlendTime = MaxBlendTime;
+		}
 	}
-	// Take desired Z rotation axis of capsule, try to keep current X rotation axis of capsule.
-	const FMatrix RotationMatrix = FRotationMatrix::MakeFromZX(DesiredCapsuleUp, GetCapsuleAxisX());
+
+	float Alpha = 1.0f;
+	if (RemainingBlendTime > 0.0f)
+	{
+		// calculate remaining time
+		RemainingBlendTime -= World->GetDeltaSeconds();
+
+		// calculate blend alpha
+		Alpha = 1.0f - FMath::Max((RemainingBlendTime / MaxBlendTime), 0.0f);
+	}
+
+	// spherical linear blend
+	FQuat InterRotation = FQuat::Slerp(InitRotation, DesiredRotation, Alpha);
+
+	// normalize. two rotations are unit quat, so it is unnecessary.
+	InterRotation.Normalize();
+
 	// Intentionally not using MoveUpdatedComponent to bypass constraints.
-	UpdatedComponent->MoveComponent(FVector::ZeroVector, RotationMatrix.Rotator(), true);
+	UpdatedComponent->MoveComponent(FVector::ZeroVector, InterRotation.Rotator(), true);
 }
 
 
@@ -3836,7 +3900,7 @@ FORCEINLINE FVector UGravityCharacterMovComp::GetCapsuleAxisZ() const
 
 void UGravityCharacterMovComp::UpdateGravity(float DeltaTime)
 {
-	UpdateComponentRotation();
+	UpdateComponentRotation(false);
 }
 
 
@@ -3883,7 +3947,8 @@ float UGravityCharacterMovComp::GetGravityMagnitude() const
 }
 
 
-void UGravityCharacterMovComp::SetGravityDirection(FVector NewGravityDirection)
+void UGravityCharacterMovComp::SetGravityDirection(FVector NewGravityDirection, float RotateBlendTime)
 {
+	MaxCompRotateBlendTime = RotateBlendTime;
 	CustomGravityDirection = NewGravityDirection.GetSafeNormal();
 }
