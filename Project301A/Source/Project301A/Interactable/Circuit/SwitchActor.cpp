@@ -6,3 +6,9 @@
 
 
 
+
+
+void ASwitchActor::InteractionKeyPressed_Implementation(const FHitResult &hit)
+{
+	ToggleState(1);
+}

@@ -12,8 +12,11 @@ UCLASS()
 class PROJECT301A_API ASwitchActor : public ACircuitActor
 {
 	GENERATED_BODY()
-	
-	
+
+
+
+	virtual void InteractionKeyPressed_Implementation(const FHitResult &hit) override;
+
 	
 	
 };

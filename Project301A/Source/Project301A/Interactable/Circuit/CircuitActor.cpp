@@ -22,11 +22,6 @@ void ACircuitActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 #endif
 
 
-void ACircuitActor::InteractionKeyPressed_Implementation(const FHitResult &hit)
-{
-	ToggleState(1);
-}
-
 
 void ACircuitActor::SetState(int32 state)
 {
