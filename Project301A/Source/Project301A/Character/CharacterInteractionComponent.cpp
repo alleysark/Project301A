@@ -6,7 +6,6 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Interactable/InteractableActor.h"
 #include "Interactable/Gravitable/GravitableActor.h"
-#include "Interactable/Circuit/Switchable/SwitchableGravityZone.h"
 
 // Sets default values for this component's properties
 UCharacterInteractionComponent::UCharacterInteractionComponent(const FObjectInitializer& ObjectInitializer)
@@ -59,11 +58,11 @@ void UCharacterInteractionComponent::BeginPlay()
 
 	// ...
 
-
-	for (TActorIterator<ASwitchableGravityZone> ActorItr(GetWorld()); ActorItr; ++ActorItr) {
-		TraceIgnoreList.Add(*ActorItr);
+	// register ignore actors of tracing test
+	for (int32 i = 0; i < TraceIgnoreActors.Num(); ++i) {
+		TSubclassOf<AActor> sbc = TraceIgnoreActors[i];
+		RegisterTraceIgnoreList(sbc);
 	}
-	
 }
 
 
@@ -118,6 +117,21 @@ void UCharacterInteractionComponent::OnDestroy(bool AbilityIsEnding)
 		this,
 		&UCharacterInteractionComponent::OnWorldCustomGravityChanged_internal);
 }
+
+template<class T>
+void UCharacterInteractionComponent::RegisterTraceIgnoreList()
+{
+	for (TActorIterator<T> ActorItr(GetWorld()); ActorItr; ++ActorItr) {
+		TraceIgnoreList.Add(*ActorItr);
+	}
+}
+
+template<class T>
+void UCharacterInteractionComponent::RegisterTraceIgnoreList(TSubclassOf<T> &subclass) {
+	TArray<AActor*> outActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), subclass, outActors);
+	TraceIgnoreList.Append(outActors);
+};
 
 
 void UCharacterInteractionComponent::GravityActivateKeyPressed()

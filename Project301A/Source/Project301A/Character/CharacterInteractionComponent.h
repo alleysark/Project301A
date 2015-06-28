@@ -30,6 +30,9 @@ public:
 	TArray<AActor*> TraceIgnoreList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharacterInteraction")
+	TArray<TSubclassOf<AActor>> TraceIgnoreActors;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharacterInteraction")
 	bool TraceDebugDisplay;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CharacterInteraction")
@@ -64,6 +67,12 @@ public:
 	void RegisterCharacterMesh(USceneComponent *Comp) {
 		CharacterShapeComponent = Comp;
 	}
+
+
+	// register ignore objects from ignore actor lists
+	template<class T>	void RegisterTraceIgnoreList();
+	template<class T>	void RegisterTraceIgnoreList(TSubclassOf<T> &subclass);
+
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	virtual void GravityActivateKeyPressed();
