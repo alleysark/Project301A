@@ -16,6 +16,7 @@ void ACircuitActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 
+	// prevent self-loop circuit.
 	if (nextActor == this) nextActor = NULL;
 }
 #endif
@@ -32,7 +33,8 @@ void ACircuitActor::SetState(int32 state)
 	CircuitState = state;
 	OnCircuitStateChanged(state);
 	
-	if (nextActor && nextActor != this) nextActor->SetState(state);
+	// if there is a next circuit actor, then propagate the state.
+	if (nextActor) nextActor->SetState(state);
 
 }
 
@@ -44,7 +46,5 @@ int32 ACircuitActor::GetState() const
 
 void ACircuitActor::ToggleState(int32 state)
 {
-	CircuitState = CircuitState == 0 ? state : 0;
-
-	SetState(CircuitState);
+	SetState(CircuitState == 0 ? state : 0);
 }
