@@ -54,4 +54,5 @@ public:
 	void UpdateGravityInOverlapComponents();
 	
 	
+	virtual void OnCircuitStateChanged_Implementation(int32 state) override;
 };

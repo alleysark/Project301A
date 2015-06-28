@@ -33,7 +33,7 @@ public:
 #endif
 
 
-	virtual void InteractionKeyPressed_Implementation(const FHitResult &hit);
+	virtual void InteractionKeyPressed_Implementation(const FHitResult &hit) override;
 
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Circuit")

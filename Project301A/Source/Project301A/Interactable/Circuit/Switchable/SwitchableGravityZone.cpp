@@ -84,3 +84,9 @@ void ASwitchableGravityZone::UpdateGravityInOverlapComponents()
 		}
 	}
 }
+
+
+void ASwitchableGravityZone::OnCircuitStateChanged_Implementation(int32 state)
+{
+	UpdateGravityInOverlapComponents();
+}
