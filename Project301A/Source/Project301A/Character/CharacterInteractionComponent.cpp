@@ -6,6 +6,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Interactable/InteractableActor.h"
 #include "Interactable/Gravitable/GravitableActor.h"
+#include "Interactable/Circuit/Switchable/SwitchableGravityZone.h"
 
 // Sets default values for this component's properties
 UCharacterInteractionComponent::UCharacterInteractionComponent(const FObjectInitializer& ObjectInitializer)
@@ -57,6 +58,11 @@ void UCharacterInteractionComponent::BeginPlay()
 	RegisterCharacterMesh(capsule);
 
 	// ...
+
+
+	for (TActorIterator<ASwitchableGravityZone> ActorItr(GetWorld()); ActorItr; ++ActorItr) {
+		TraceIgnoreList.Add(*ActorItr);
+	}
 	
 }
 
