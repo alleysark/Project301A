@@ -45,6 +45,9 @@ public:
 	bool trace_test; 
 
 	UPROPERTY(BlueprintReadWrite, Category = "CharacterInteraction")
+	class ADynamicActor* holding_actor;
+
+	UPROPERTY(BlueprintReadWrite, Category = "CharacterInteraction")
 	FHitResult hit;
 
 	USceneComponent *CharacterShapeComponent;
@@ -73,6 +76,8 @@ public:
 	template<class T>	void RegisterTraceIgnoreList();
 	template<class T>	void RegisterTraceIgnoreList(TSubclassOf<T> &subclass);
 
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	virtual void SetHoldingActor(ADynamicActor* actor);
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	virtual void GravityActivateKeyPressed();

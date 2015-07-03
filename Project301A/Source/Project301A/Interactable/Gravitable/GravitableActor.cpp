@@ -20,7 +20,7 @@ void AGravitableActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CreatePhysicsConstraints();
+	//CreatePhysicsConstraints();
 	SetActualMass();
 
 	SetEnableGravity_internal(false);

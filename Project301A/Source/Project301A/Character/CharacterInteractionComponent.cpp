@@ -118,6 +118,11 @@ void UCharacterInteractionComponent::OnDestroy(bool AbilityIsEnding)
 		&UCharacterInteractionComponent::OnWorldCustomGravityChanged_internal);
 }
 
+void UCharacterInteractionComponent::SetHoldingActor(ADynamicActor* actor)
+{
+	holding_actor = actor;
+}
+
 template<class T>
 void UCharacterInteractionComponent::RegisterTraceIgnoreList()
 {
@@ -176,6 +181,11 @@ void UCharacterInteractionComponent::InteractionKeyReleased()
 
 void UCharacterInteractionComponent::LiftKeyPressed()
 {
+	if (holding_actor != NULL) {
+		holding_actor->EventRightMouseClickPressed(FHitResult());
+		return;
+	}
+
 	if (!trace_test) return;
 
 	AInteractableActor *inac = Cast<AInteractableActor>(hit.GetActor());

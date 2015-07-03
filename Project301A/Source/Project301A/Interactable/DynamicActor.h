@@ -17,8 +17,15 @@ class PROJECT301A_API ADynamicActor : public AInteractableActor
 public:
 
 	ADynamicActor(const FObjectInitializer &ObjectInitializer);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gravity")
+	TArray<UStaticMeshComponent*> MeshComps;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gravity")
+	bool IsHold;
 	
-	
+	void CreatePhysicsConstraints();
+
 public:
 
 	virtual void GravityActivateKeyPressed_Implementation(const FHitResult &hit) override;
