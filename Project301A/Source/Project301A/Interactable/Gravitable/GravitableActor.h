@@ -106,7 +106,10 @@ public:
 
 	FORCEINLINE void AddGravity_internal() {
 		for (int32 i = 0; i < MeshComps.Num(); ++i) {
-			MeshComps[i]->AddForce(GetGravity() * MeshActualMass[i]);
+			if (MeshComps[i]->IsSimulatingPhysics())
+			{
+				MeshComps[i]->AddForce(GetGravity() * MeshActualMass[i]);
+			}
 		}
 	}
 	
