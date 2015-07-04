@@ -24,7 +24,7 @@ void ADynamicActor::InteractionKeyPressed_Implementation(const FHitResult &hit)
 
 	ACharacter* myCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
 	FVector SocketLocation;
-	SocketLocation = myCharacter->Mesh->GetSocketLocation("RightHandSocket");
+	SocketLocation = myCharacter->GetMesh()->GetSocketLocation("RightHandSocket");
 
 	if (!IsHold)
 	{
@@ -34,12 +34,10 @@ void ADynamicActor::InteractionKeyPressed_Implementation(const FHitResult &hit)
 			MeshComponent->SetSimulatePhysics(false);
 		}
 
-		this->K2_AttachRootComponentTo(myCharacter->Mesh, "RightHandSocket", EAttachLocation::SnapToTarget, true);
+		this->K2_AttachRootComponentTo(myCharacter->GetMesh(), "RightHandSocket", EAttachLocation::SnapToTarget, true);
 		IsHold = true;
-		UCharacterInteractionComponent* temp = myCharacter->FindComponentByClass < UCharacterInteractionComponent > ;
+		UCharacterInteractionComponent* temp = myCharacter->FindComponentByClass < UCharacterInteractionComponent >();
 		temp->SetHoldingActor(this);
-		
-
 	}
 	else
 	{
@@ -50,21 +48,14 @@ void ADynamicActor::InteractionKeyPressed_Implementation(const FHitResult &hit)
 		}
 		this->DetachRootComponentFromParent(true);
 		IsHold = false;
-		UCharacterInteractionComponent* temp = myCharacter->FindComponentByClass < UCharacterInteractionComponent >;
+		UCharacterInteractionComponent* temp = myCharacter->FindComponentByClass < UCharacterInteractionComponent >();
 		temp->SetHoldingActor(NULL);
-
 	}
 
 }
 
-void ADynamicActor::CreatePhysicsConstraints()
+void ADynamicActor::CacheAllSMComponents()
 {
 	MeshComps.Empty();
-
-	TArray<UStaticMeshComponent*> comps;
-	this->GetComponents(comps);
-	for (UStaticMeshComponent* StaticMeshComponent : comps)
-	{
-		MeshComps.Add(StaticMeshComponent);
-	}
+	this->GetComponents<UStaticMeshComponent>(MeshComps);
 }

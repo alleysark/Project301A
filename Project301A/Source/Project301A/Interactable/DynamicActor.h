@@ -24,7 +24,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gravity")
 	bool IsHold;
 	
-	void CreatePhysicsConstraints();
+	// cache all static mesh components to MeshComps array
+	void CacheAllSMComponents();
 
 public:
 

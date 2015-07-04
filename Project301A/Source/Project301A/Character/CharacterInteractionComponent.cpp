@@ -182,7 +182,7 @@ void UCharacterInteractionComponent::InteractionKeyReleased()
 void UCharacterInteractionComponent::LiftKeyPressed()
 {
 	if (holding_actor != NULL) {
-		holding_actor->EventRightMouseClickPressed(FHitResult());
+		holding_actor->LiftKeyPressed(FHitResult());
 		return;
 	}
 

@@ -19,10 +19,6 @@ public:
 
 	//// member
 
-	// array of StaticMeshComponent
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gravity")
-	//TArray<UStaticMeshComponent*> MeshComps;
-
 	TArray<float> MeshActualMass;
 
 	// Enable custom gravity
@@ -52,8 +48,6 @@ public:
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
 #endif
-
-	//void CreatePhysicsConstraints();
 
 	// Set gravity of object. This function also fix gravity of object.
 	UFUNCTION(BlueprintCallable, Category = "Gravity")

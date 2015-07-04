@@ -20,7 +20,8 @@ void AGravitableActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//CreatePhysicsConstraints();
+	CacheAllSMComponents();
+
 	SetActualMass();
 
 	SetEnableGravity_internal(false);
@@ -56,55 +57,6 @@ void AGravitableActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyCha
 	Super::PostEditChangeProperty(PropertyChangedEvent);
 }
 #endif
-
-void AGravitableActor::CreatePhysicsConstraints()
-{
-	MeshComps.Empty();
-
-	TArray<UStaticMeshComponent*> comps;
-	this->GetComponents(comps);
-	for (UStaticMeshComponent* StaticMeshComponent : comps)
-	{
-		MeshComps.Add(StaticMeshComponent);
-	}
-
-	//TArray<UStaticMeshComponent*> SMComps;
-	//GetComponents(SMComps);
-
-	//int32 Num = SMComps.Num();
-	//if (Num == 0) MeshComps.Add(SMComps[0]);
-	//else if (Num > 1)
-	//{
-	//	for (int32 i = 0, End = Num - 1; i < End; i++)
-	//	{
-	//		MeshComps.Add(SMComps[i]);
-	//		auto SMCompCur = SMComps[i];
-	//		auto SMCompNext = SMComps[i + 1];
-
-	//		FConstraintInstance ConstraintInstance;
-
-	//		//New Object
-	//		UPhysicsConstraintComponent* ConstraintComp = NewObject<UPhysicsConstraintComponent>(this);
-	//		if (!ConstraintComp)
-	//		{
-	//			GEngine->AddOnScreenDebugMessage(-1, 15.f, FColor::Red, "Failed to create phys constraint comp");
-	//			return;
-	//		}
-	//		ConstraintComp->SetConstrainedComponents(SMCompCur, NAME_None, SMCompNext, NAME_None);
-
-	//		ConstraintComp->SetLinearXLimit(ELinearConstraintMotion::LCM_Locked, 0.0f);
-	//		ConstraintComp->SetLinearYLimit(ELinearConstraintMotion::LCM_Locked, 0.0f);
-	//		ConstraintComp->SetLinearZLimit(ELinearConstraintMotion::LCM_Locked, 0.0f);
-	//		ConstraintComp->SetAngularSwing1Limit(EAngularConstraintMotion::ACM_Locked, 0.0f);
-	//		ConstraintComp->SetAngularSwing2Limit(EAngularConstraintMotion::ACM_Locked, 0.0f);
-	//		ConstraintComp->SetAngularTwistLimit(EAngularConstraintMotion::ACM_Locked, 0.0f);
-
-	//		ConstraintComp->AttachTo(GetRootComponent(), NAME_None);
-	//	}
-	//	MeshComps.Add(SMComps[Num-1]);
-	//}
-}
-
 
 
 void AGravitableActor::SetGravity(const FVector &newGravity)
