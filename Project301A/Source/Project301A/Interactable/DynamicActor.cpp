@@ -5,27 +5,25 @@
 //#include "Character/CharacterInteractionComponent.h"
 #include "Character/GravityCharacter.h"
 ADynamicActor::ADynamicActor(const FObjectInitializer &ObjectInitializer)
-: Super(ObjectInitializer)
+: Super(ObjectInitializer), IsHold(false)
 {
 }
 
 
 
-void ADynamicActor::GravityActivateKeyPressed_Implementation(const FHitResult &hit)
-{
-
-}
-
-void ADynamicActor::InteractionKeyPressed_Implementation(const FHitResult &hit)
+void ADynamicActor::LiftKeyPressed_Implementation(const FHitResult &hit)
 {
 	//************************
 	// to write
 	// hold object code (carry)
 
-	ACharacter* myCharacter = UGameplayStatics::GetPlayerCharacter(GetWorld(), 0);
-	FVector SocketLocation;
-	SocketLocation = myCharacter->GetMesh()->GetSocketLocation("RightHandSocket");
-
+	AGravityCharacter* myCharacter = dynamic_cast<AGravityCharacter*>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (myCharacter == NULL)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("There isn't a GravityCharacter or it is not the derived class of GravityCharacter"));
+		return;
+	}
+	
 	if (!IsHold)
 	{
 		for (UStaticMeshComponent* MeshComponent : MeshComps)
@@ -36,8 +34,7 @@ void ADynamicActor::InteractionKeyPressed_Implementation(const FHitResult &hit)
 
 		this->K2_AttachRootComponentTo(myCharacter->GetMesh(), "RightHandSocket", EAttachLocation::SnapToTarget, true);
 		IsHold = true;
-		UCharacterInteractionComponent* temp = myCharacter->FindComponentByClass < UCharacterInteractionComponent >();
-		temp->SetHoldingActor(this);
+		myCharacter->CharacterInteraction->SetHoldingActor(this);
 	}
 	else
 	{
@@ -48,8 +45,7 @@ void ADynamicActor::InteractionKeyPressed_Implementation(const FHitResult &hit)
 		}
 		this->DetachRootComponentFromParent(true);
 		IsHold = false;
-		UCharacterInteractionComponent* temp = myCharacter->FindComponentByClass < UCharacterInteractionComponent >();
-		temp->SetHoldingActor(NULL);
+		myCharacter->CharacterInteraction->SetHoldingActor(NULL);
 	}
 
 }

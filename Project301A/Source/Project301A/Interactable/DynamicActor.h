@@ -29,7 +29,6 @@ public:
 
 public:
 
-	virtual void GravityActivateKeyPressed_Implementation(const FHitResult &hit) override;
-	virtual void InteractionKeyPressed_Implementation(const FHitResult &hit) override;
+	virtual void LiftKeyPressed_Implementation(const FHitResult &hit) override;
 	
 };
