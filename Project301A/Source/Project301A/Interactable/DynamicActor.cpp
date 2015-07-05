@@ -5,7 +5,7 @@
 //#include "Character/CharacterInteractionComponent.h"
 #include "Character/GravityCharacter.h"
 ADynamicActor::ADynamicActor(const FObjectInitializer &ObjectInitializer)
-: Super(ObjectInitializer), IsHold(false)
+: Super(ObjectInitializer), IsHold(false), IsGrabbable(false)
 {
 }
 
@@ -17,7 +17,11 @@ void ADynamicActor::LiftKeyPressed_Implementation(const FHitResult &hit)
 	// to write
 	// hold object code (carry)
 
-	AGravityCharacter* myCharacter = dynamic_cast<AGravityCharacter*>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	// if it is not grabbable actor, than just return.
+	if (!IsGrabbable)
+		return;
+
+	AGravityCharacter* myCharacter = Cast<AGravityCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (myCharacter == NULL)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("There isn't a GravityCharacter or it is not the derived class of GravityCharacter"));

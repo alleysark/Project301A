@@ -21,7 +21,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gravity")
 	TArray<UStaticMeshComponent*> MeshComps;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gravity")
+	// is this dynamic actor grabbbable?
+	// default value is false.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gravity")
+	bool IsGrabbable;
+
 	bool IsHold;
 	
 	// cache all static mesh components to MeshComps array
