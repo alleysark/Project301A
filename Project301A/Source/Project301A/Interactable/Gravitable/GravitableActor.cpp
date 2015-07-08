@@ -20,8 +20,6 @@ void AGravitableActor::BeginPlay()
 {
 	Super::BeginPlay();
 
-	CacheAllSMComponents();
-
 	SetActualMass();
 
 	SetEnableGravity_internal(false);

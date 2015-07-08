@@ -28,6 +28,8 @@ public:
 
 	bool IsHold;
 	
+	virtual void BeginPlay() override;
+
 	// cache all static mesh components to MeshComps array
 	void CacheAllSMComponents();
 
