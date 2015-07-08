@@ -9,6 +9,10 @@ ADynamicActor::ADynamicActor(const FObjectInitializer &ObjectInitializer)
 {
 }
 
+void ADynamicActor::BeginPlay()
+{
+	CacheAllSMComponents();
+}
 
 
 void ADynamicActor::LiftKeyPressed_Implementation(const FHitResult &hit)
