@@ -17,7 +17,7 @@ public:
 
 	AStaticActor(const FObjectInitializer &ObjectInitializer);
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gravity")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gravity")
 	bool CanChangeWorldGravity;
 	
 	
