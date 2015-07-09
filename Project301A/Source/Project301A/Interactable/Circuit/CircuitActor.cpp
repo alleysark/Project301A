@@ -7,7 +7,6 @@
 ACircuitActor::ACircuitActor(const FObjectInitializer &ObjectInitializer)
 : Super(ObjectInitializer), nextActor(NULL), CircuitState(0)
 {
-	CanChangeWorldGravity = false;
 }
 
 

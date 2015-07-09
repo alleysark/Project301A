@@ -17,6 +17,8 @@ class PROJECT301A_API AGravitableActor : public ADynamicActor
 	
 public:
 
+	AGravitableActor(const FObjectInitializer &ObjectInitializer);
+
 	//// member
 
 	TArray<float> MeshActualMass;
@@ -115,12 +117,6 @@ public:
 	
 public:
 
-	AGravitableActor(const FObjectInitializer &ObjectInitializer);
-
-
-public:
-
-	virtual void GravityActivateKeyPressed_Implementation(const FHitResult &hit) override;
 	virtual void InteractionKeyPressed_Implementation(const FHitResult &hit) override;
 	
 };

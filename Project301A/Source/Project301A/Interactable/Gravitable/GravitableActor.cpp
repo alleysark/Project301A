@@ -116,14 +116,7 @@ void AGravitableActor::SetWorldCustomGravity(const FVector newGravity)
 
 
 
-void AGravitableActor::GravityActivateKeyPressed_Implementation(const FHitResult &hit)
-{
-	SetFixCustomGravity(!fixedGravity);
-}
-
 void AGravitableActor::InteractionKeyPressed_Implementation(const FHitResult &hit)
 {
-	Super::InteractionKeyPressed_Implementation(hit);
-
-
+	SetFixCustomGravity(!fixedGravity);
 }

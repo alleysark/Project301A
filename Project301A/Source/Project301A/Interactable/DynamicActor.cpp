@@ -4,8 +4,10 @@
 #include "DynamicActor.h"
 //#include "Character/CharacterInteractionComponent.h"
 #include "Character/GravityCharacter.h"
+#include "Gravitable/GravitableActor.h"
+
 ADynamicActor::ADynamicActor(const FObjectInitializer &ObjectInitializer)
-: Super(ObjectInitializer), IsHold(false), IsGrabbable(false)
+: Super(ObjectInitializer), CanChangeWorldGravity(false), IsHold(false), IsGrabbable(false)
 {
 }
 
@@ -15,12 +17,16 @@ void ADynamicActor::BeginPlay()
 }
 
 
+void ADynamicActor::GravityActivateKeyPressed_Implementation(const FHitResult &hit)
+{
+	if (CanChangeWorldGravity) {
+		AGravitableActor::SetWorldCustomGravity(-hit.Normal * 9.8);
+	}
+}
+
+
 void ADynamicActor::LiftKeyPressed_Implementation(const FHitResult &hit)
 {
-	//************************
-	// to write
-	// hold object code (carry)
-
 	// if it is not grabbable actor, than just return.
 	if (!IsGrabbable)
 		return;

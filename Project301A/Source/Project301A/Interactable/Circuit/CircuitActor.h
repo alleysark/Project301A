@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include "Interactable/StaticActor.h"
+#include "Interactable/InteractableActor.h"
 #include "CircuitActor.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PROJECT301A_API ACircuitActor : public AStaticActor
+class PROJECT301A_API ACircuitActor : public AInteractableActor
 {
 	GENERATED_BODY()
 	

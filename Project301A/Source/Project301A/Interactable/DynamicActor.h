@@ -19,6 +19,9 @@ public:
 	ADynamicActor(const FObjectInitializer &ObjectInitializer);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gravity")
+	bool CanChangeWorldGravity;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Gravity")
 	TArray<UStaticMeshComponent*> MeshComps;
 
 	// is this dynamic actor grabbbable?
@@ -34,6 +37,8 @@ public:
 	void CacheAllSMComponents();
 
 public:
+
+	virtual void GravityActivateKeyPressed_Implementation(const FHitResult &hit) override;
 
 	virtual void LiftKeyPressed_Implementation(const FHitResult &hit) override;
 	
