@@ -2,6 +2,7 @@
 
 #include "Project301A.h"
 #include "GravitableActor.h"
+#include "Character/GravityCharacter.h"
 
 
 FVector AGravitableActor::world_gravity = FVector(0, 0, -9.8);
@@ -9,7 +10,8 @@ FSWorldCustomGravityChangedSignature AGravitableActor::WorldCustomGravityChanged
 
 AGravitableActor::AGravitableActor(const FObjectInitializer &ObjectInitializer)
 : Super(ObjectInitializer), EnableCustomGravity(true), fixedGravity(false),
-gravity_p(&world_gravity), gravity_p_prev(gravity_p)
+gravity_p(&world_gravity), gravity_p_prev(gravity_p),
+IsHeld(false), IsGrabbable(false)
 {
 	gravity = FVector(0, 0, -9.8);
 }
@@ -119,4 +121,44 @@ void AGravitableActor::SetWorldCustomGravity(const FVector newGravity)
 void AGravitableActor::InteractionKeyPressed_Implementation(const FHitResult &hit)
 {
 	SetFixCustomGravity(!fixedGravity);
+}
+
+
+void AGravitableActor::LiftKeyPressed_Implementation(const FHitResult &hit)
+{
+	// if it is not grabbable actor, than just return.
+	if (!IsGrabbable)
+		return;
+
+	AGravityCharacter* myCharacter = Cast<AGravityCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	if (myCharacter == NULL)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("There isn't a GravityCharacter or it is not the derived class of GravityCharacter"));
+		return;
+	}
+
+	if (!IsHeld)
+	{
+		for (UStaticMeshComponent* MeshComponent : MeshComps)
+		{
+			MeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			MeshComponent->SetSimulatePhysics(false);
+		}
+
+		this->K2_AttachRootComponentTo(myCharacter->GetMesh(), "RightHandSocket", EAttachLocation::SnapToTarget, true);
+		IsHeld = true;
+		myCharacter->CharacterInteraction->SetHoldingActor(this);
+	}
+	else
+	{
+		for (UStaticMeshComponent* MeshComponent : MeshComps)
+		{
+			MeshComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+			MeshComponent->SetSimulatePhysics(true);
+		}
+		this->DetachRootComponentFromParent(true);
+		IsHeld = false;
+		myCharacter->CharacterInteraction->SetHoldingActor(NULL);
+	}
+
 }

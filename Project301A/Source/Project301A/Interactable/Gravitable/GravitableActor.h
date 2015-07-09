@@ -2,7 +2,7 @@
 
 #pragma once
 
-#include "Interactable/DynamicActor.h"
+#include "Interactable/VanillaActor.h"
 #include "GravitableActor.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSWorldCustomGravityChangedSignature, FVector, newGravity);
@@ -11,7 +11,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSWorldCustomGravityChangedSignature
  * 
  */
 UCLASS()
-class PROJECT301A_API AGravitableActor : public ADynamicActor
+class PROJECT301A_API AGravitableActor : public AVanillaActor
 {
 	GENERATED_BODY()
 	
@@ -41,6 +41,17 @@ public:
 	// static member
 	static FVector world_gravity;
 
+
+	// is this dynamic actor grabbbable?
+	// default value is false.
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gravity")
+	bool IsGrabbable;
+
+	// if this actor is held
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Gravity")
+	bool IsHeld;
+
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -69,7 +80,7 @@ public:
 	void SetFixCustomGravity(bool b);
 
 	// Return to previous gravity. For example, when object exits gravity zone, gravity becomes world gravity.
-	//UFUNCTION(BlueprintCallable, Category = "GravityX")
+	//UFUNCTION(BlueprintCallable, Category = "Gravity")
 	void ReturnCustomGravity();
 
 	void ReturnWorldCustomGravity();
@@ -119,4 +130,6 @@ public:
 
 	virtual void InteractionKeyPressed_Implementation(const FHitResult &hit) override;
 	
+	virtual void LiftKeyPressed_Implementation(const FHitResult &hit) override;
+
 };

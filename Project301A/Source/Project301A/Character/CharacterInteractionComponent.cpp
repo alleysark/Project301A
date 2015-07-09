@@ -118,7 +118,7 @@ void UCharacterInteractionComponent::OnDestroy(bool AbilityIsEnding)
 		&UCharacterInteractionComponent::OnWorldCustomGravityChanged_internal);
 }
 
-void UCharacterInteractionComponent::SetHoldingActor(ADynamicActor* actor)
+void UCharacterInteractionComponent::SetHoldingActor(AGravitableActor* actor)
 {
 	holding_actor = actor;
 }
