@@ -34,5 +34,17 @@ public:
 	
 
 	class UCharacterInteractionComponent* GetInteractionComponent() const;
-	
+
+	UFUNCTION(BlueprintCallable, Category = "Gravity")
+	class UGravityCharacterMovComp* GetGravityCharacterMovComp() const;
+
+
+public:
+	// call this function to change character gravity rather than calling
+	// SetGravityDirection of UGravityCharacterMovComp.
+	UFUNCTION(BlueprintCallable, Category = "Gravity")
+	void SetGravityDirection(const FVector &newGravity, float RotateBlendTime = 2.0f);
+
+	void ReturnWorldCustomGravity(float RotateBlendTime = 2.0f);
+
 };

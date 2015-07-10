@@ -2,6 +2,7 @@
 
 #include "Project301A.h"
 #include "GravityCharacter.h"
+#include "Interactable/Gravitable/GravitableActor.h"
 #include "GravityCharacterMovComp.h"
 
 
@@ -40,4 +41,20 @@ void AGravityCharacter::SetupPlayerInputComponent(class UInputComponent* InputCo
 UCharacterInteractionComponent* AGravityCharacter::GetInteractionComponent() const
 {
 	return CharacterInteraction;
+}
+
+UGravityCharacterMovComp* AGravityCharacter::GetGravityCharacterMovComp() const
+{
+	return Cast<UGravityCharacterMovComp>(GetCharacterMovement());
+}
+
+
+void AGravityCharacter::SetGravityDirection(const FVector &newGravity, float RotateBlendTime)
+{
+	GetGravityCharacterMovComp()->SetGravityDirection(newGravity, RotateBlendTime);
+}
+
+void AGravityCharacter::ReturnWorldCustomGravity(float RotateBlendTime)
+{
+	GetGravityCharacterMovComp()->SetGravityDirection(AGravitableActor::world_gravity, RotateBlendTime);
 }
