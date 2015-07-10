@@ -3,12 +3,13 @@
 #pragma once
 
 #include "Components/ActorComponent.h"
-#include "GravityZone.h"
 #include "CharacterInteractionComponent.generated.h"
 
+class ASwitchableGravityZone;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FWorldCustomGravityChangedSignature, FVector, newGravity);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEnterGravityZoneSignature, AGravityZone*, GravityZone, FVector, newGravity);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FExitGravityZoneSignature, AGravityZone*, GravityZone);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEnterGravityZoneSignature, ASwitchableGravityZone*, GravityZone, FVector, newGravity);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FExitGravityZoneSignature, ASwitchableGravityZone*, GravityZone);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class PROJECT301A_API UCharacterInteractionComponent : public UActorComponent
@@ -111,4 +112,9 @@ public:
 	UFUNCTION()
 	void OnWorldCustomGravityChanged_internal(FVector newGravity);
 
+	UFUNCTION()
+	void OnEnterGravityZone_internal(ASwitchableGravityZone* GravityZone, FVector newGravity);
+
+	UFUNCTION()
+	void OnExitGravityZone_internal(ASwitchableGravityZone* GravityZone);
 };

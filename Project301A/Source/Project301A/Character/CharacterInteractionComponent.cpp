@@ -24,7 +24,7 @@ hit_comp_prev(NULL), mat_org(NULL)
 		this,
 		&UCharacterInteractionComponent::OnWorldCustomGravityChanged_internal);
 	
-
+	
 	// ...
 }
 
@@ -209,3 +209,12 @@ void UCharacterInteractionComponent::OnWorldCustomGravityChanged_internal(FVecto
 	OnWorldCustomGravityChanged.Broadcast(newGravity);
 }
 
+void UCharacterInteractionComponent::OnEnterGravityZone_internal(ASwitchableGravityZone* GravityZone, FVector newGravity)
+{
+
+}
+
+void UCharacterInteractionComponent::OnExitGravityZone_internal(ASwitchableGravityZone* GravityZone)
+{
+
+}
