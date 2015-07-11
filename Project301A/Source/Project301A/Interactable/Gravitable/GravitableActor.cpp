@@ -10,10 +10,9 @@ FSWorldCustomGravityChangedSignature AGravitableActor::WorldCustomGravityChanged
 
 AGravitableActor::AGravitableActor(const FObjectInitializer &ObjectInitializer)
 : Super(ObjectInitializer), EnableCustomGravity(true), fixedGravity(false),
-gravity_p(&world_gravity), gravity_p_prev(gravity_p),
+gravity_p(&world_gravity), gravity_p_prev(gravity_p), gravity(0.0f, 0.0f, -9.8f),
 MeshMassMultiplier(100.0f), IsHeld(false), IsGrabbable(false)
 {
-	gravity = FVector(0, 0, -9.8);
 }
 
 
