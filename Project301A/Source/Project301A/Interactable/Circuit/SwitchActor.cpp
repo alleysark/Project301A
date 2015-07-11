@@ -4,11 +4,20 @@
 #include "SwitchActor.h"
 
 
-
-
-
-
-void ASwitchActor::InteractionKeyPressed_Implementation(const FHitResult &hit)
+ASwitchActor::ASwitchActor(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
-	ToggleState(1);
+}
+
+
+void ASwitchActor::SupplyPower(int32 state)
+{
+	PowerSupplied = true;
+
+	PowerTurnedOn(CircuitState);
+
+	if (CircuitState > 0 && nextActor)
+	{
+		nextActor->SupplyPower(CircuitState);
+	}
 }

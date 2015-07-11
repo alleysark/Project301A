@@ -21,11 +21,16 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Circuit")
 	bool IsInUse;
 
+	// called when gravity stone is pulled out from socket.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Circuit")
 	void OnPulledOut();
 	virtual void OnPulledOut_Implementation();
 
+	// called when gravity stone is plugged into socket.
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Circuit")
 	void OnPluggedIn();
 	virtual void OnPluggedIn_Implementation();
+
+
+	virtual void LiftKeyPressed_Implementation(const FHitResult &hit) override;
 };

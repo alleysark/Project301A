@@ -32,14 +32,6 @@ ASwitchableGravityZone::ASwitchableGravityZone(const FObjectInitializer& ObjectI
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-// Called when the game starts or when spawned
-void ASwitchableGravityZone::BeginPlay()
-{
-	Super::BeginPlay();
-
-	if (GetState()) UpdateGravityInOverlapComponents();
-}
-
 // Called every frame
 void ASwitchableGravityZone::Tick(float DeltaTime)
 {
@@ -47,69 +39,51 @@ void ASwitchableGravityZone::Tick(float DeltaTime)
 
 }
 
+
+void ASwitchableGravityZone::AffectGravity(AActor* actor)
+{
+	auto cg = Cast<AGravitableActor>(actor);
+	if (cg) {
+		cg->SetGravity_internal(GetGravity_p());
+	}
+	else {
+		auto GravCharacter = Cast<AGravityCharacter>(actor);
+		if (GravCharacter) {
+			GravCharacter->SetGravityDirection(GetGravity());
+		}
+	}
+}
+void ASwitchableGravityZone::RestoreGravity(AActor* actor)
+{
+	auto cg = Cast<AGravitableActor>(actor);
+	if (cg) {
+		cg->ReturnWorldCustomGravity();
+	}
+	else {
+		auto GravCharacter = Cast<AGravityCharacter>(actor);
+		if (GravCharacter) {
+			GravCharacter->ReturnWorldCustomGravity();
+		}
+	}
+}
+
+
 void ASwitchableGravityZone::OnBeginOverlap(AActor* other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
 	bool bFromSweep, const FHitResult &SweepResult)
 {
-	if (GetState())
+	if (IsPowerOn())
 	{
-		auto cg = Cast<AGravitableActor>(other);
-		if (cg) {
-			cg->SetGravity_internal(GetGravity_p());
-			return;
-		}
-
-		auto GravCharacter = Cast<AGravityCharacter>(other);
-		if (GravCharacter) {
-			GravCharacter->SetGravityDirection(GetGravity());
-			return;
-		}
+		AffectGravity(other);
 	}
 	else
 	{
-		auto cg = Cast<AGravitableActor>(other);
-		if (cg) {
-			cg->ReturnWorldCustomGravity();
-			return;
-		}
-
-		auto GravCharacter = Cast<AGravityCharacter>(other);
-		if (GravCharacter) {
-			GravCharacter->ReturnWorldCustomGravity();
-			return;
-		}
+		RestoreGravity(other);
 	}
-	
-	//AGravitableActor* cg = Cast<AGravitableActor>(other);
-	//if (GetState()){
-	//	// cast to CustomGravity object
-	//	if (cg) {
-	//		cg->SetGravity_internal(GetGravity_p());
-	//	}
-	//} else {
-	//	if (cg) {
-	//		cg->ReturnWorldCustomGravity();
-	//	}
-	//}
 }
 
 void ASwitchableGravityZone::OnEndOverlap(AActor* other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
 {
-	auto cg = Cast<AGravitableActor>(other);
-	if (cg) {
-		cg->ReturnWorldCustomGravity();
-		return;
-	}
-
-	auto GravCharacter = Cast<AGravityCharacter>(other);
-	if (GravCharacter) {
-		GravCharacter->ReturnWorldCustomGravity();
-		return;
-	}
-
-	//AGravitableActor *cg = Cast<AGravitableActor>(other);
-	//if (cg) {
-	//	cg->ReturnWorldCustomGravity();
-	//}
+	RestoreGravity(other);
 }
 
 void ASwitchableGravityZone::UpdateGravityInOverlapComponents()
@@ -118,46 +92,34 @@ void ASwitchableGravityZone::UpdateGravityInOverlapComponents()
 	triggerBox->GetOverlappingActors(overlaps);
 
 	for (auto actor : overlaps) {
-		if (GetState())
+		if (IsPowerOn())
 		{
-			auto cg = Cast<AGravitableActor>(actor);
-			if (cg) {
-				cg->SetGravity_internal(GetGravity_p());
-			}
-			else {
-				auto GravCharacter = Cast<AGravityCharacter>(actor);
-				if (GravCharacter) {
-					GravCharacter->SetGravityDirection(GetGravity());
-				}
-			}
+			AffectGravity(actor);
 		}
 		else
 		{
-			auto cg = Cast<AGravitableActor>(actor);
-			if (cg) {
-				cg->ReturnWorldCustomGravity();
-			}
-			else {
-				auto GravCharacter = Cast<AGravityCharacter>(actor);
-				if (GravCharacter) {
-					GravCharacter->ReturnWorldCustomGravity();
-				}
-			}
+			RestoreGravity(actor);
 		}
-
-
-		//AGravitableActor *cg = Cast<AGravitableActor>(actor);
-		//if (cg && GetState()) {
-		//	cg->SetGravity_internal(GetGravity_p());
-		//}
-		//else if (cg && !GetState())		{
-		//	cg->ReturnWorldCustomGravity();
-		//}
 	}
 }
 
 
-void ASwitchableGravityZone::OnCircuitStateChanged_Implementation(int32 state)
+void ASwitchableGravityZone::PowerTurnedOn_Implementation(int32 NewCircuitState)
 {
-	UpdateGravityInOverlapComponents();
+	TArray<AActor*> overlaps;
+	triggerBox->GetOverlappingActors(overlaps);
+
+	for (auto actor : overlaps) {
+		AffectGravity(actor);
+	}
+}
+
+void ASwitchableGravityZone::PowerTurnedOff_Implementation()
+{
+	TArray<AActor*> overlaps;
+	triggerBox->GetOverlappingActors(overlaps);
+
+	for (auto actor : overlaps) {
+		RestoreGravity(actor);
+	}
 }

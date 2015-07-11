@@ -5,8 +5,19 @@
 
 
 ACircuitActor::ACircuitActor(const FObjectInitializer &ObjectInitializer)
-: Super(ObjectInitializer), nextActor(NULL), CircuitState(0)
+: Super(ObjectInitializer), nextActor(NULL), CircuitState(0), PowerSupplied(false)
 {
+}
+
+
+void ACircuitActor::BeginPlay()
+{
+	Super::BeginPlay();
+
+	if (PowerSupplied && CircuitState > 0)
+	{
+		SupplyPower(CircuitState);
+	}
 }
 
 
@@ -21,17 +32,23 @@ void ACircuitActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyChange
 #endif
 
 
-
 void ACircuitActor::SetState(int32 state)
 {
 	CircuitState = state;
-	OnCircuitStateChanged(state);
 	
-	// if there is a next circuit actor, then propagate the state.
-	if (nextActor) nextActor->SetState(state);
-
+	if (nextActor)
+	{
+		if (CircuitState == 0)
+		{
+			// power state of this circuit is not changed.
+			nextActor->CutPowerSupply();
+		}
+		else if (PowerSupplied)
+		{
+			nextActor->SupplyPower(CircuitState);
+		}
+	}
 }
-
 
 int32 ACircuitActor::GetState() const
 {
@@ -41,4 +58,35 @@ int32 ACircuitActor::GetState() const
 void ACircuitActor::ToggleState(int32 state)
 {
 	SetState(CircuitState == 0 ? state : 0);
+}
+
+
+bool ACircuitActor::IsPowerOn() const
+{
+	return (PowerSupplied && CircuitState > 0);
+}
+
+void ACircuitActor::CutPowerSupply()
+{
+	PowerSupplied = false;
+
+	PowerTurnedOff();
+
+	if (nextActor)
+	{
+		nextActor->CutPowerSupply();
+	}
+}
+
+void ACircuitActor::SupplyPower(int32 state)
+{
+	PowerSupplied = true;
+	CircuitState = state;
+
+	PowerTurnedOn(CircuitState);
+
+	if (CircuitState > 0 && nextActor)
+	{
+		nextActor->SupplyPower(CircuitState);
+	}
 }

@@ -26,11 +26,11 @@ public:
 	// Sets default values for this actor's properties
 	ASwitchableGravityZone(const FObjectInitializer& ObjectInitializer);
 
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
 	// Called every frame
 	virtual void Tick(float DeltaSeconds) override;
+
+	void AffectGravity(AActor* actor);
+	void RestoreGravity(AActor* actor);
 
 	UFUNCTION()
 	void OnBeginOverlap(AActor* other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
@@ -53,6 +53,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Gravity")
 	void UpdateGravityInOverlapComponents();
 	
-	
-	virtual void OnCircuitStateChanged_Implementation(int32 state) override;
+
+	virtual void PowerTurnedOn_Implementation(int32 NewCircuitState) override;
+	virtual void PowerTurnedOff_Implementation() override;
 };

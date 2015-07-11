@@ -6,10 +6,12 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Interactable/InteractableActor.h"
 #include "Interactable/Gravitable/GravitableActor.h"
+#include "Interactable/Gravitable/GravityStone.h"
 
 // Sets default values for this component's properties
 UCharacterInteractionComponent::UCharacterInteractionComponent(const FObjectInitializer& ObjectInitializer)
 : Super(ObjectInitializer), RaycastRange(170), TraceBoxSize(0, 30, 50), TraceDebugDisplay(false), trace_test(false),
+CarryingGravityStone(NULL), holding_actor(NULL),
 hit_comp_prev(NULL), mat_org(NULL)
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
@@ -118,6 +120,33 @@ void UCharacterInteractionComponent::OnDestroy(bool AbilityIsEnding)
 		&UCharacterInteractionComponent::OnWorldCustomGravityChanged_internal);
 }
 
+
+bool UCharacterInteractionComponent::HasGravityStone() const
+{
+	return (CarryingGravityStone != NULL);
+}
+
+void UCharacterInteractionComponent::PickUpGravityStone(AGravityStone* GravityStone)
+{
+	CarryingGravityStone = GravityStone;
+
+	// TODO: float gravity stone around character or do whatever awesome effect.
+	auto Character = Cast<ACharacter>(GetOwner());
+	CarryingGravityStone->K2_AttachRootComponentTo(Character->GetMesh(), "RightHandSocket", EAttachLocation::SnapToTarget, true);
+}
+
+AGravityStone* UCharacterInteractionComponent::PutDownGravityStone()
+{
+	// TODO: turn off carrying gravity stone effect
+	CarryingGravityStone->DetachRootComponentFromParent(true);
+
+	AGravityStone* GravityStone = CarryingGravityStone;
+	CarryingGravityStone = NULL;
+	
+	return GravityStone;
+}
+
+
 void UCharacterInteractionComponent::SetHoldingActor(AGravitableActor* actor)
 {
 	holding_actor = actor;
@@ -183,6 +212,11 @@ void UCharacterInteractionComponent::LiftKeyPressed()
 {
 	if (holding_actor != NULL) {
 		holding_actor->LiftKeyPressed(FHitResult());
+		return;
+	}
+
+	if (HasGravityStone()) {
+		CarryingGravityStone->LiftKeyPressed(FHitResult());
 		return;
 	}
 

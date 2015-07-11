@@ -13,10 +13,11 @@ class PROJECT301A_API ASwitchActor : public ACircuitActor
 {
 	GENERATED_BODY()
 
+public:
 
+	ASwitchActor(const FObjectInitializer& ObjectInitializer);
 
-	virtual void InteractionKeyPressed_Implementation(const FHitResult &hit) override;
-
-	
-	
+	// override power supply functionality.
+	// circuit state of switch does not affected by connected circuit actor.
+	virtual void SupplyPower(int32 state) override;
 };

@@ -45,6 +45,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "CharacterInteraction")
 	bool trace_test; 
 
+	UPROPERTY(BlueprintReadOnly, Category = "CharacterInteraction")
+	class AGravityStone* CarryingGravityStone;
+
 	UPROPERTY(BlueprintReadWrite, Category = "CharacterInteraction")
 	class AGravitableActor* holding_actor;
 
@@ -76,6 +79,15 @@ public:
 	// register ignore objects from ignore actor lists
 	template<class T>	void RegisterTraceIgnoreList();
 	template<class T>	void RegisterTraceIgnoreList(TSubclassOf<T> &subclass);
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	bool HasGravityStone() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	void PickUpGravityStone(class AGravityStone* GravityStone);
+	
+	UFUNCTION(BlueprintCallable, Category = "Interaction")
+	class AGravityStone* PutDownGravityStone();
 
 	UFUNCTION(BlueprintCallable, Category = "Interaction")
 	virtual void SetHoldingActor(AGravitableActor* actor);

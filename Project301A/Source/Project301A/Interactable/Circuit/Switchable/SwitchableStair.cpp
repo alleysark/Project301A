@@ -51,7 +51,7 @@ void ASwitchableStair::Tick(float DeltaTime)
 		Comp[0]->GetLocalBounds(MinBaseBound, MaxBaseBound);
 		BaseSize = MaxBaseBound - MinBaseBound;
 
-		if (GetState())
+		if (IsPowerOn())
 		{
 			for (int i = 1; i < Comp.Num(); ++i)
 			{
@@ -164,7 +164,7 @@ void ASwitchableStair::UpdateStair()
 		Scale.X -= diff;
 		CurComp[iStepNum]->SetWorldScale3D(Scale);
 		FVector Location = FVector(dX*(float)iStepNum / 2.f, 0, 0);
-		if (GetState()) Location.Z = BaseSize.Z*(float)iStepNum;
+		if (IsPowerOn()) Location.Z = BaseSize.Z*(float)iStepNum;
 		CurComp[iStepNum]->SetRelativeLocation(Location);
 
 	}
@@ -200,7 +200,7 @@ void ASwitchableStair::AnimateStair()
 			AnimationDistence.Add(BaseSize.Z*(float)i);
 			CompLocation.Add(FVector(dX * (float)i / 2.f, 0, 0));
 			CompLocationReverse.Add(FVector(dX * (float)i / 2.f, 0, 0));
-			if (!GetState()) CompLocation.Last().Z = BaseSize.Z*(float)i;
+			if (!IsPowerOn()) CompLocation.Last().Z = BaseSize.Z*(float)i;
 			else CompLocationReverse.Last().Z = BaseSize.Z*(float)i;
 		}
 
@@ -211,7 +211,11 @@ void ASwitchableStair::AnimateStair()
 }
 
 
-void ASwitchableStair::OnCircuitStateChanged_Implementation(int32 state)
+void ASwitchableStair::PowerTurnedOn_Implementation(int32 NewCircuitState)
+{
+	AnimateStair();
+}
+void ASwitchableStair::PowerTurnedOff_Implementation()
 {
 	AnimateStair();
 }
