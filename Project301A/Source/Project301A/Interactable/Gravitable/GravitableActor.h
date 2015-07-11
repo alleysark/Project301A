@@ -21,8 +21,6 @@ public:
 
 	//// member
 
-	TArray<float> MeshActualMass;
-
 	// Enable custom gravity
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gravity")
 	bool EnableCustomGravity;
@@ -40,6 +38,10 @@ public:
 
 	// static member
 	static FVector world_gravity;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Gravity")
+	float MeshMassMultiplier;
 
 
 	// is this dynamic actor grabbbable?
@@ -100,15 +102,6 @@ public:
 
 	static FSWorldCustomGravityChangedSignature WorldCustomGravityChanged;
 
-	FORCEINLINE void SetActualMass() {
-
-		MeshActualMass.Empty();
-		for (int32 i = 0; i < MeshComps.Num(); ++i) {
-			MeshActualMass.Add(MeshComps[i]->GetMass() * 100);
-		}
-		
-	}
-
 
 	FORCEINLINE void SetEnableGravity_internal(bool b) {
 		for (int32 i = 0; i < MeshComps.Num(); ++i) {
@@ -117,14 +110,7 @@ public:
 		}
 	}
 
-	FORCEINLINE void AddGravity_internal() {
-		for (int32 i = 0; i < MeshComps.Num(); ++i) {
-			if (MeshComps[i]->IsSimulatingPhysics())
-			{
-				MeshComps[i]->AddForce(GetGravity() * MeshActualMass[i]);
-			}
-		}
-	}
+	void AddGravity_internal();
 	
 public:
 

@@ -11,7 +11,7 @@ FSWorldCustomGravityChangedSignature AGravitableActor::WorldCustomGravityChanged
 AGravitableActor::AGravitableActor(const FObjectInitializer &ObjectInitializer)
 : Super(ObjectInitializer), EnableCustomGravity(true), fixedGravity(false),
 gravity_p(&world_gravity), gravity_p_prev(gravity_p),
-IsHeld(false), IsGrabbable(false)
+MeshMassMultiplier(100.0f), IsHeld(false), IsGrabbable(false)
 {
 	gravity = FVector(0, 0, -9.8);
 }
@@ -21,8 +21,6 @@ IsHeld(false), IsGrabbable(false)
 void AGravitableActor::BeginPlay()
 {
 	Super::BeginPlay();
-
-	SetActualMass();
 
 	SetEnableGravity_internal(false);
 
@@ -47,9 +45,6 @@ void AGravitableActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyCha
 
 	// mesh update
 	SetEnableGravity_internal(false);
-
-	// mass update
-	SetActualMass();
 
 	if (fixedGravity) FixCurrentGravity();
 	else ReturnCustomGravity();
@@ -116,6 +111,16 @@ void AGravitableActor::SetWorldCustomGravity(const FVector newGravity)
 	WorldCustomGravityChanged.Broadcast(newGravity);
 }
 
+void AGravitableActor::AddGravity_internal()
+{
+	for (auto mesh : MeshComps)
+	{
+		if (mesh->IsSimulatingPhysics())
+		{
+			mesh->AddForce(GetGravity() * mesh->GetMass() * MeshMassMultiplier);
+		}
+	}
+}
 
 
 void AGravitableActor::InteractionKeyPressed_Implementation(const FHitResult &hit)
