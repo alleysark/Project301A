@@ -6,8 +6,8 @@
 #include "SwitchableStair_renew.generated.h"
 
 /**
- * 
- */
+*
+*/
 UCLASS()
 class PROJECT301A_API ASwitchableStair_renew : public ASwitchableActor
 {
@@ -17,29 +17,41 @@ public:
 	//Consturctor
 	ASwitchableStair_renew(const FObjectInitializer &ObjectInitializer);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stair")
-		bool IsUniformSteps;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stair")
-		int32 Length;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stair")
-		int32 Height;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stair")
-		int32 Width;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stair")
-		int32 NumSteps;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stair")
-		float AnimationTime;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stair")
-		UStaticMesh* Cube;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stair")
-		UStaticMeshComponent* BaseStair;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stair")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stair")
+		bool IsUniformSteps;			 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stair")
+		int32 StepMarginLength;			 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stair")
+		int32 StepMarginHeight;			 
+										 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stair")
+		int32 Length;					 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stair")
+		int32 Height;					 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stair")
+		int32 Width;					 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stair")
+		int32 NumSteps;					 
+										 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stair")
+		float AnimationTime;			 
+										 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stair")
+		UStaticMesh* Cube;				 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stair")
+		UMaterial* CubeMat;				 
+										 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stair")
+		UStaticMeshComponent* BaseStair; 
+										 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Stair")
 		USceneComponent* RootPosition;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StairAnimation")
+		TArray<FVector> StepStartPoints;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "StairAnimation")
+		TArray<FVector> StepEndPoints;
 
 	//Caching default CubeSize
 	FVector CubeSize;
@@ -52,10 +64,12 @@ public:
 
 	virtual void OnConstruction(const FTransform & Transform) override;
 
-	void UpdateStair();
+
+	UFUNCTION(BlueprintCallable, Category = "Stair")
+		void UpdateStair();
 
 	virtual void OnCircuitStateChanged_Implementation(int32 state);
-	
+
 
 
 	FORCEINLINE FVector GetSizeofStep(UStaticMeshComponent* &Step)
